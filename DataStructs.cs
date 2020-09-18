@@ -8,9 +8,10 @@ namespace Memenim.Core.Data
         public int code { get; set; }
         public bool error { get; set; }
         public T data { get; set; }
+        public string message { get; set; }
     }
 
-    class AuthData
+    public class AuthData
     {
         public int id { get; set; }
         public string token { get; set; }
@@ -81,7 +82,7 @@ namespace Memenim.Core.Data
     }
 
 
-    class ProfileData
+    public class ProfileData
     {
         public int id { get; set; }
         public string login { get; set; }
@@ -105,7 +106,7 @@ namespace Memenim.Core.Data
         public string banner { get; set; }
     }
 
-    class CommentData
+    public class CommentData
     {
         public class CommentUserData
         {
@@ -122,6 +123,12 @@ namespace Memenim.Core.Data
     public class StatData
     {
         public int count { get; set; }
+    }
+
+    public class EditPostData
+    {
+        public int id { get; set; }
+        public string text { get; set; }
     }
 
     class IDData

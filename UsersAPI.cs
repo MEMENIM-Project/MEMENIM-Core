@@ -6,7 +6,7 @@ using Memenim.Core.Data;
 
 namespace Memenim.Core
 {
-    static class UsersAPI
+    public static class UsersAPI
     {
         public static async Task<ApiResponse<AuthData>> RegisterUser(string username, string pass)
         {
@@ -20,10 +20,10 @@ namespace Memenim.Core
             return await APIHelper.RequestInternal<AuthData>("users/login2", auth);
         }
 
-        public static async Task<ApiResponse<ProfileData>> GetUserProfileByID(int profileId)
+        public static async Task<ApiResponse<List<ProfileData>>> GetUserProfileByID(int profileId)
         {
             IDData data = new IDData() { id = profileId };
-            return await APIHelper.RequestInternal<ProfileData>("users/profile/getById", data);
+            return await APIHelper.RequestInternal<List<ProfileData>>("users/profile/getById", data);
         }
 
         public static async Task<ApiResponse<object>> EditProfile(ProfileData profileData, string userToken)

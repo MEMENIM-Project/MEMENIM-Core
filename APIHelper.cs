@@ -30,7 +30,10 @@ namespace Memenim.Core
         public static async Task<ApiResponse<T>> RequestInternal<T>(string request, object requestData, string token = "")
         {
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+            if(token.Length > 0)
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+            }
             var json = JsonConvert.SerializeObject(requestData);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
