@@ -27,11 +27,10 @@ namespace Memenim.Core
         /// <param name="request">String of API request</param>
         /// <param name="requestData"></param>
         /// <returns>Returns a response data from service</returns>
-        public static async Task<ApiResponse<T>> RequestInternal<T>(string request, object requestData)
+        public static async Task<ApiResponse<T>> RequestInternal<T>(string request, object requestData, string token = "")
         {
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
             var json = JsonConvert.SerializeObject(requestData);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 

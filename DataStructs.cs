@@ -10,7 +10,7 @@ namespace Memenim.Core.Data
         public T data { get; set; }
     }
 
-    class LoginData
+    class AuthData
     {
         public int id { get; set; }
         public string token { get; set; }
@@ -43,6 +43,19 @@ namespace Memenim.Core.Data
         public string link { get; set; } = null;
         public PhotoData photo { get; set; }
         public string type { get; set; } = "photo";
+    }
+
+    public class PostRequest
+    {
+        public enum EPostType
+        {
+            New = 1,
+            Popular = 2,
+            Favorite = 3,
+            My = 4
+        }
+        public int count { get; set; } = 20;
+        public EPostType type { get; set; } = EPostType.Popular;
     }
 
     public class PostData
@@ -109,6 +122,11 @@ namespace Memenim.Core.Data
     public class StatData
     {
         public int count { get; set; }
+    }
+
+    class IDData
+    {
+        public int id { get; set; }
     }
 
 }
