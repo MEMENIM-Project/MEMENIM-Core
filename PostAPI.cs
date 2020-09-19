@@ -15,6 +15,13 @@ namespace Memenim.Core
             return await APIHelper.RequestInternal<List<PostData>>("posts/get", data, userToken);
         }
 
+        public static async Task<ApiResponse<List<PostData>>> GetPostById(int id, string userToken)
+        {
+            int[] ids = new int[1] { id };
+            var requestData = new { post_ids = ids };
+            return await APIHelper.RequestInternal<List<PostData>>("posts/getById", requestData, userToken);
+        }
+
         public static async Task<ApiResponse<List<CommentData>>> GetCommentsForPost(int postId)
         {
             var id = new { post_id = postId };
