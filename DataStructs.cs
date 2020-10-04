@@ -56,6 +56,7 @@ namespace Memenim.Core.Data
             My = 4
         }
         public int count { get; set; } = 20;
+        public int offset { get; set; } = 0;
         public EPostType type { get; set; } = EPostType.Popular;
     }
 
