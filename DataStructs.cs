@@ -137,4 +137,12 @@ namespace Memenim.Core.Data
         public int id { get; set; }
     }
 
+
+    public class LibraryPhotoData
+    {
+        public int id { get; set; }
+        public string photo_small { get; set; }
+        public string photo_medium { get; set; }
+        public string photo_big { get; set; }
+    }
 }

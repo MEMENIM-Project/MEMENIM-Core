@@ -22,9 +22,9 @@ namespace Memenim.Core
             return await APIHelper.RequestInternal<List<PostData>>("posts/getById", requestData, userToken);
         }
 
-        public static async Task<ApiResponse<List<CommentData>>> GetCommentsForPost(int postId)
+        public static async Task<ApiResponse<List<CommentData>>> GetCommentsForPost(int postId, int commentsOffset = 0)
         {
-            var id = new { post_id = postId };
+            var id = new { post_id = postId, offset = commentsOffset };
             return await APIHelper.RequestInternal<List<CommentData>>("posts/getComments", id);
         }
 
@@ -55,6 +55,19 @@ namespace Memenim.Core
             var requestData = new { post_id = postId };
             return await APIHelper.RequestInternal<object>("posts/repost", requestData, userToken);
         }
+
+        public static async Task<ApiResponse<object>> LikePost(int postId, string userToken)
+        {
+            var requestData = new { post_id = postId };
+            return await APIHelper.RequestInternal<object>("posts/likeAdd", requestData, userToken);
+        }
+
+        public static async Task<ApiResponse<object>> DislikePost(int postId, string userToken)
+        {
+            var requestData = new { post_id = postId };
+            return await APIHelper.RequestInternal<object>("posts/dislikeAdd", requestData, userToken);
+        }
+
 
         public static async Task<ApiResponse<object>> LikeComment(int commentId, string userToken)
         {
