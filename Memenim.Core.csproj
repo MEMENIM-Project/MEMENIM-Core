@@ -1,14 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.01.7</Version>
-    <Company>MEMENIM</Company>
-    <Authors>D1ckWare</Authors>
-    <RepositoryUrl>https://github.com/MEMENIM-Project/MEMENIM-Core</RepositoryUrl>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+    <Configurations>Debug;Release;Release Nuget</Configurations>
+    <RootNamespace>Memenim.Core</RootNamespace>
+    <AssemblyName>Memenim.Core</AssemblyName>
+    <AssemblyVersion>0.2.0.0</AssemblyVersion>
+    <FileVersion>0.2.0.0</FileVersion>
+    <PackageId>Memenim.Core</PackageId>
+    <Product>Memenim.Core</Product>
+    <Version>0.2.0</Version>
     <Description>Library for interaction with Anonym Service</Description>
+    <PackageTags>dotnetcore, netstandard, netcore, library</PackageTags>
+    <Authors>D1ckWare, Dmitry Ponomarev</Authors>
+    <Company>MEMENIM</Company>
+    <Copyright>Copyright (c) RISStudio, 2020</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/RISStudio-tm/RIS-Libraries</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/MEMENIM-Project/MEMENIM-Core</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS0067;SS003;SS004;U2U1009</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Nuget|AnyCPU'">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
