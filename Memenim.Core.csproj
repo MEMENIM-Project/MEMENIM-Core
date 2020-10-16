@@ -14,7 +14,7 @@
     <PackageTags>dotnetcore, netstandard, netcore, library</PackageTags>
     <Authors>D1ckWare, Dmitry Ponomarev</Authors>
     <Company>MEMENIM</Company>
-    <Copyright>Copyright (c) RISStudio, 2020</Copyright>
+    <Copyright>Copyright (c) MEMENIM, 2020</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/RISStudio-tm/RIS-Libraries</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
