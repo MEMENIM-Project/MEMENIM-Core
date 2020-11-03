@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Memenim.Core.Data
+namespace Memenim.Core.Schema
 {
     public enum PostType : byte
     {

@@ -1,121 +1,223 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Memenim.Core.Data;
+using Memenim.Core.Schema;
 
 namespace Memenim.Core.Api
 {
     public static class PostApi
     {
-        public static Task<ApiResponse<List<PostData>>> GetAll(PostRequest data, string token)
-        {
-            return ApiRequestEngine.ExecuteRequestJson<List<PostData>>("posts/get", data, token);
-        }
-
-        public static Task<ApiResponse<List<PostData>>> GetById(int id, string token)
+        public static Task<ApiResponse<List<PostSchema>>> Get(string token,
+            PostType type = PostType.Popular, int count = 20, int offset = 0)
         {
             var requestData = new
             {
-                post_ids = new int[] { id }
-            };
-
-            return ApiRequestEngine.ExecuteRequestJson<List<PostData>>("posts/getById", requestData, token);
-        }
-
-        public static Task<ApiResponse<object>> AddPost(PostData post, string token)
-        {
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/add", post, token);
-        }
-
-        public static Task<ApiResponse<object>> EditPost(EditPostRequest postData, string token)
-        {
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/edit", postData, token);
-        }
-
-        public static Task<ApiResponse<object>> AddView(int id, string token)
-        {
-            var requestData = new
-            {
-                post_id = id
-            };
-
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/viewAdd", requestData, token);
-        }
-
-        public static Task<ApiResponse<object>> AddRepost(int id, string token)
-        {
-            var requestData = new
-            {
-                post_id = id
-            };
-
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/repost", requestData, token);
-        }
-
-        public static Task<ApiResponse<object>> AddLike(int id, string token)
-        {
-            var requestData = new
-            {
-                post_id = id
-            };
-
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/likeAdd", requestData, token);
-        }
-
-        public static Task<ApiResponse<object>> AddDislike(int id, string token)
-        {
-            var requestData = new
-            {
-                post_id = id
-            };
-
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/dislikeAdd", requestData, token);
-        }
-
-
-
-        public static Task<ApiResponse<List<CommentData>>> GetComments(int id, int offset = 0)
-        {
-            var requestData = new
-            {
-                post_id = id,
+                type,
+                count,
                 offset
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<CommentData>>("posts/getComments", requestData);
+            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/get", requestData, token);
         }
 
-        public static Task<ApiResponse<object>> AddComment(int id, string content, bool? anonymous, string token)
+        public static async Task<ApiResponse<PostSchema>> GetById(string token, int id)
         {
             var requestData = new
             {
-                post_id = id,
-                text = content,
+                post_ids = new[]
+                {
+                    id
+                }
+            };
+
+            var response = await ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData, token)
+                .ConfigureAwait(false);
+
+            return new ApiResponse<PostSchema>
+            {
+                code = response.code,
+                data = response.data.Count != 0
+                    ? response.data[0]
+                    : null,
+                error = response.error,
+                message = response.message
+            };
+        }
+        public static Task<ApiResponse<List<PostSchema>>> GetById(string token, int[] ids)
+        {
+            var requestData = new
+            {
+                post_ids = ids
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData, token);
+        }
+
+        public static Task<ApiResponse<IdSchema>> AddPost(string token, PostSchema post)
+        {
+            return ApiRequestEngine.ExecuteRequestJson<IdSchema>("posts/add", post, token);
+        }
+
+        public static Task<ApiResponse> RemovePost(string token, int id)
+        {
+            var requestData = new
+            {
+                post_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson("posts/removePost", requestData, token);
+        }
+
+        public static Task<ApiResponse> EditPost(string token, PostEditSchema schema)
+        {
+            return ApiRequestEngine.ExecuteRequestJson("posts/edit", schema, token);
+        }
+
+        public static Task<ApiResponse> AddView(int id)
+        {
+            var requestData = new
+            {
+                post_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson("posts/viewAdd", requestData);
+        }
+
+        public static Task<ApiResponse> AddRepost(int id)
+        {
+            var requestData = new
+            {
+                post_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson("posts/repost", requestData);
+        }
+
+        public static Task<ApiResponse<CountSchema>> AddLike(string token, int id)
+        {
+            var requestData = new
+            {
+                post_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/likeAdd", requestData, token);
+        }
+
+        public static Task<ApiResponse<CountSchema>> RemoveLike(string token, int id)
+        {
+            var requestData = new
+            {
+                post_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/likeDelete", requestData, token);
+        }
+
+        public static Task<ApiResponse<CountSchema>> AddDislike(string token,  int id)
+        {
+            var requestData = new
+            {
+                post_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeAdd", requestData, token);
+        }
+
+        public static Task<ApiResponse<CountSchema>> RemoveDislike(string token, int id)
+        {
+            var requestData = new
+            {
+                post_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeDelete", requestData, token);
+        }
+
+
+
+        public static Task<ApiResponse<List<CommentSchema>>> GetComments(int postId, int count = 20, int offset = 0)
+        {
+            var requestData = new
+            {
+                post_id = postId,
+                count,
+                offset
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<List<CommentSchema>>("posts/getComments", requestData);
+        }
+
+        public static Task<ApiResponse<IdSchema>> AddComment(string token, int postId, string text, bool? anonymous = false)
+        {
+            var requestData = new
+            {
+                post_id = postId,
+                text,
                 anonim = Convert.ToInt32(anonymous)
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/commentAdd", requestData, token);
+            return ApiRequestEngine.ExecuteRequestJson<IdSchema>("posts/commentAdd", requestData, token);
         }
 
-        public static Task<ApiResponse<object>> AddLikeComment(int id, string token)
+        public static Task<ApiResponse> RemoveComment(string token, int id)
         {
             var requestData = new
             {
                 comment_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/likeCommentAdd", requestData, token);
+            return ApiRequestEngine.ExecuteRequestJson("posts/removeComment", requestData, token);
         }
 
-        public static Task<ApiResponse<object>> AddDislikeComment(int id, string token)
+        public static Task<ApiResponse> EditComment(string token, int id, string text)
+        {
+            var requestData = new
+            {
+                comment_id = id,
+                text
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson("posts/editComment", requestData, token);
+        }
+
+        public static Task<ApiResponse<CountSchema>> AddLikeComment(string token, int id)
         {
             var requestData = new
             {
                 comment_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<object>("posts/dislikeCommentAdd", requestData, token);
+            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/likeCommentAdd", requestData, token);
         }
 
+        public static Task<ApiResponse<CountSchema>> RemoveLikeComment(string token, int id)
+        {
+            var requestData = new
+            {
+                comment_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/likeCommentDelete", requestData, token);
+        }
+
+        public static Task<ApiResponse<CountSchema>> AddDislikeComment(string token, int id)
+        {
+            var requestData = new
+            {
+                comment_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeCommentAdd", requestData, token);
+        }
+
+        public static Task<ApiResponse<CountSchema>> RemoveDislikeComment(string token, int id)
+        {
+            var requestData = new
+            {
+                comment_id = id
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeCommentDelete", requestData, token);
+        }
     }
 }

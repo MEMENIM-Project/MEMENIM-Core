@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Memenim.Core.Data;
+using Memenim.Core.Schema;
 using Newtonsoft.Json;
 
 namespace Memenim.Core.Api
@@ -23,12 +23,12 @@ namespace Memenim.Core.Api
 #if NETCOREAPP
             HttpHandler = new SocketsHttpHandler
             {
-                MaxConnectionsPerServer = 1024
+                MaxConnectionsPerServer = int.MaxValue
             };
 #elif NETSTANDARD
             HttpHandler = new HttpClientHandler
             {
-                MaxConnectionsPerServer = 1024
+                MaxConnectionsPerServer = int.MaxValue
             };
 #endif
             HttpClient = new HttpClient(HttpHandler)
@@ -41,10 +41,23 @@ namespace Memenim.Core.Api
             };
         }
 
+        public static async Task<ApiResponse> ExecuteRequestJson(string request, object data,
+            string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
+        {
+            var response = await ExecuteRequestJson<object>(request, data, token, type, endPoint)
+                .ConfigureAwait(false);
+
+            return new ApiResponse
+            {
+                code = response.code,
+                error = response.error,
+                message = response.message
+            };
+        }
         public static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data,
             string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
-            HttpRequestMessage httpRequest = new HttpRequestMessage();
+            var httpRequest = new HttpRequestMessage();
             HttpResponseMessage httpResponse;
 
             httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -53,7 +66,7 @@ namespace Memenim.Core.Api
                 httpRequest.Headers.Authorization = new AuthenticationHeaderValue(token);
 
             if (endPoint == null)
-                endPoint = ApiEndPoint.General;
+                endPoint = ApiEndPoint.GeneralDev;
 
             httpRequest.RequestUri = new Uri(endPoint.Url + request);
 
@@ -72,8 +85,8 @@ namespace Memenim.Core.Api
                 case RequestType.Post:
                 default:
                 {
-                    string json = JsonConvert.SerializeObject(data);
-                    StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var json = JsonConvert.SerializeObject(data);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                     httpRequest.Method = HttpMethod.Post;
                     httpRequest.Content = content;
@@ -85,7 +98,7 @@ namespace Memenim.Core.Api
                 }
             }
 
-            string result = await httpResponse.Content.ReadAsStringAsync()
+            var result = await httpResponse.Content.ReadAsStringAsync()
                 .ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<ApiResponse<T>>(result);

@@ -5,18 +5,18 @@
     <Configurations>Debug;Release;Release Nuget</Configurations>
     <RootNamespace>Memenim.Core</RootNamespace>
     <AssemblyName>Memenim.Core</AssemblyName>
-    <AssemblyVersion>0.2.0.0</AssemblyVersion>
-    <FileVersion>0.2.0.0</FileVersion>
+    <AssemblyVersion>0.3.0.0</AssemblyVersion>
+    <FileVersion>0.3.0.0</FileVersion>
     <PackageId>Memenim.Core</PackageId>
     <Product>Memenim.Core</Product>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Description>Library for interaction with Anonym Service</Description>
     <PackageTags>dotnetcore, netstandard, netcore, library</PackageTags>
     <Authors>D1ckWare, Dmitry Ponomarev</Authors>
     <Company>MEMENIM</Company>
     <Copyright>Copyright (c) MEMENIM, 2020</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/RISStudio-tm/RIS-Libraries</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/MEMENIM-Project/MEMENIM-Core</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/MEMENIM-Project/MEMENIM-Core</RepositoryUrl>
   </PropertyGroup>
