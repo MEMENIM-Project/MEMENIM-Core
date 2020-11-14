@@ -66,7 +66,7 @@ namespace Memenim.Core.Api
                 httpRequest.Headers.Authorization = new AuthenticationHeaderValue(token);
 
             if (endPoint == null)
-                endPoint = ApiEndPoint.GeneralDev;
+                endPoint = ApiEndPoint.GeneralPublic;
 
             httpRequest.RequestUri = new Uri(endPoint.Url + request);
 
