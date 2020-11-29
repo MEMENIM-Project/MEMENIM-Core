@@ -918,15 +918,15 @@ namespace Memenim.Core.Schema
             }
         }
         private int _author_watch = 1;
-        public int author_watch
+        public string author_watch
         {
             get
             {
-                return _author_watch;
+                return _author_watch.ToString();
             }
             set
             {
-                _author_watch = value;
+                _author_watch = Convert.ToInt32(value);
                 OnPropertyChanged(nameof(author_watch));
             }
         }
