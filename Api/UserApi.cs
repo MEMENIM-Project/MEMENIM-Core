@@ -7,7 +7,8 @@ namespace Memenim.Core.Api
 {
     public static class UserApi
     {
-        public static Task<ApiResponse<AuthSchema>> Register(string login, string password, string nickname = null)
+        public static Task<ApiResponse<AuthSchema>> Register(string login,
+            string password, string nickname = null)
         {
             if (nickname == null)
                 nickname = login;
@@ -20,6 +21,18 @@ namespace Memenim.Core.Api
             };
 
             return ApiRequestEngine.ExecuteRequestJson<AuthSchema>("users/add", requestData);
+        }
+
+        public static Task<ApiResponse> ChangePassword(string token,
+            string oldPassword, string newPassword)
+        {
+            var requestData = new
+            {
+                oldPassword,
+                newPassword
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson("users/changePassword", requestData, token);
         }
 
         public static Task<ApiResponse<AuthSchema>> Login(string login, string password)
