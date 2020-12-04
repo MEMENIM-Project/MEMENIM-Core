@@ -23,6 +23,18 @@ namespace Memenim.Core.Api
             return ApiRequestEngine.ExecuteRequestJson<AuthSchema>("users/add", requestData);
         }
 
+        public static Task<ApiResponse<AuthSchema>> Login(string login,
+            string password)
+        {
+            var requestData = new
+            {
+                login,
+                password
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<AuthSchema>("users/login2", requestData);
+        }
+
         public static Task<ApiResponse> ChangePassword(string token,
             string oldPassword, string newPassword)
         {
@@ -35,18 +47,24 @@ namespace Memenim.Core.Api
             return ApiRequestEngine.ExecuteRequestJson("users/changePassword", requestData, token);
         }
 
-        public static Task<ApiResponse<AuthSchema>> Login(string login, string password)
+        public static async Task<ApiResponse<int?>> GetId(string token)
         {
-            var requestData = new
-            {
-                login,
-                password
-            };
+            var response = await ApiRequestEngine.ExecuteRequestJson<IdSchema>("users/profile/get", null, token)
+                .ConfigureAwait(false);
 
-            return ApiRequestEngine.ExecuteRequestJson<AuthSchema>("users/login2", requestData);
+            return new ApiResponse<int?>
+            {
+                code = response.code,
+                data = response.data != null
+                    ? (int?)response.data.id
+                    : null,
+                error = response.error,
+                message = response.message
+            };
         }
 
-        public static Task<ApiResponse<List<SearchedUserSchema>>> GetUsers(int count = 20, int offset = 0, int type = 0)
+        public static Task<ApiResponse<List<SearchedUserSchema>>> GetUsers(int count = 20,
+            int offset = 0, int type = 0)
         {
             var requestData = new
             {
@@ -56,6 +74,28 @@ namespace Memenim.Core.Api
             };
 
             return ApiRequestEngine.ExecuteRequestJson<List<SearchedUserSchema>>("users/get", requestData);
+        }
+
+        public static async Task<ApiResponse<UserSchema>> GetUser(string token)
+        {
+            ApiResponse<int?> idResponse = await GetId(token)
+                .ConfigureAwait(false);
+
+            if (idResponse.error || !idResponse.data.HasValue)
+            {
+                return new ApiResponse<UserSchema>
+                {
+                    code = idResponse.code,
+                    data = null,
+                    error = true,
+                    message = string.IsNullOrEmpty(idResponse.message)
+                        ? "user id is not valid"
+                        : idResponse.message
+                };
+            }
+
+            return await GetUserById(idResponse.data.Value)
+                .ConfigureAwait(false);
         }
 
         public static async Task<ApiResponse<UserSchema>> GetUserById(int id)
@@ -89,6 +129,28 @@ namespace Memenim.Core.Api
             };
 
             return ApiRequestEngine.ExecuteRequestJson<List<UserSchema>>("users/getById", requestData);
+        }
+
+        public static async Task<ApiResponse<ProfileSchema>> GetProfile(string token)
+        {
+            ApiResponse<int?> idResponse = await GetId(token)
+                .ConfigureAwait(false);
+
+            if (idResponse.error || !idResponse.data.HasValue)
+            {
+                return new ApiResponse<ProfileSchema>
+                {
+                    code = idResponse.code,
+                    data = null,
+                    error = true,
+                    message = string.IsNullOrEmpty(idResponse.message)
+                        ? "user id is not valid"
+                        : idResponse.message
+                };
+            }
+
+            return await GetProfileById(idResponse.data.Value)
+                .ConfigureAwait(false);
         }
 
         public static async Task<ApiResponse<ProfileSchema>> GetProfileById(int id)

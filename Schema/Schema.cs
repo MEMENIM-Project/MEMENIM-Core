@@ -563,6 +563,19 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(banner));
             }
         }
+        public int _status;
+        public int status
+        {
+            get
+            {
+                return _status;
+            }
+            set
+            {
+                _status = value;
+                OnPropertyChanged(nameof(status));
+            }
+        }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
@@ -1117,6 +1130,19 @@ namespace Memenim.Core.Schema
             {
                 _author_watch = value;
                 OnPropertyChanged(nameof(author_watch));
+            }
+        }
+        public int _status;
+        public int status
+        {
+            get
+            {
+                return _status;
+            }
+            set
+            {
+                _status = value;
+                OnPropertyChanged(nameof(status));
             }
         }
         private int _reposts;

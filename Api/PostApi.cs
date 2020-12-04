@@ -97,6 +97,31 @@ namespace Memenim.Core.Api
             return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData, token);
         }
 
+        public static Task<ApiResponse<List<PostSchema>>> GetByUserId(
+            int userId, int count = 20, int offset = 0)
+        {
+            var requestData = new
+            {
+                user_id = userId,
+                count,
+                offset
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getByUserId", requestData);
+        }
+        public static Task<ApiResponse<List<PostSchema>>> GetByUserId(string token,
+            int userId, int count = 20, int offset = 0)
+        {
+            var requestData = new
+            {
+                user_id = userId,
+                count,
+                offset
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getByUserId", requestData, token);
+        }
+
         public static Task<ApiResponse<IdSchema>> Add(string token, PostSchema post)
         {
             return ApiRequestEngine.ExecuteRequestJson<IdSchema>("posts/add", post, token);
