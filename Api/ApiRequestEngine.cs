@@ -54,7 +54,7 @@ namespace Memenim.Core.Api
                 message = response.message
             };
         }
-        public static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data,
+        public static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data = null,
             string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
             var httpRequest = new HttpRequestMessage();
@@ -85,8 +85,13 @@ namespace Memenim.Core.Api
                 case RequestType.Post:
                 default:
                 {
-                    var json = JsonConvert.SerializeObject(data);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    StringContent content = null;
+
+                    if (data != null)
+                    {
+                        var json = JsonConvert.SerializeObject(data);
+                        content = new StringContent(json, Encoding.UTF8, "application/json");
+                    }
 
                     httpRequest.Method = HttpMethod.Post;
                     httpRequest.Content = content;
