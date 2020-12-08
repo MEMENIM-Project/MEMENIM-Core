@@ -32,6 +32,30 @@ namespace Memenim.Core.Schema
         }
     }
 
+    public class RocketPasswordSchema : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private string _password = string.Empty;
+        public string password
+        {
+            get
+            {
+                return _password;
+            }
+            set
+            {
+                _password = value;
+                OnPropertyChanged(nameof(password));
+            }
+        }
+
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
     public class AuthSchema : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

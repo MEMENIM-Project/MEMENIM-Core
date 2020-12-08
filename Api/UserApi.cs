@@ -178,5 +178,10 @@ namespace Memenim.Core.Api
         {
             return ApiRequestEngine.ExecuteRequestJson("users/profile/set", profileData, token);
         }
+
+        public static Task<ApiResponse<RocketPasswordSchema>> GetRocketPassword(string token)
+        {
+            return ApiRequestEngine.ExecuteRequestJson<RocketPasswordSchema>("users/getRocketPassword", null, token);
+        }
     }
 }
