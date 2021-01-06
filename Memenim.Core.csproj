@@ -5,11 +5,11 @@
     <Configurations>Debug;Release;Release Nuget</Configurations>
     <RootNamespace>Memenim.Core</RootNamespace>
     <AssemblyName>Memenim.Core</AssemblyName>
-    <AssemblyVersion>0.3.7.0</AssemblyVersion>
-    <FileVersion>0.3.7.0</FileVersion>
+    <AssemblyVersion>0.3.8.0</AssemblyVersion>
+    <FileVersion>0.3.8.0</FileVersion>
     <PackageId>Memenim.Core</PackageId>
     <Product>Memenim.Core</Product>
-    <Version>0.3.7</Version>
+    <Version>0.3.8</Version>
     <Description>Library for interaction with Anonym Service</Description>
     <PackageTags>dotnetcore, netstandard, netcore, library</PackageTags>
     <Authors>D1ckWare, Dmitry Ponomarev</Authors>
@@ -28,6 +28,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Nuget|AnyCPU'">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <Target Name="PostPack" AfterTargets="Pack" Condition="'$(Configuration)|$(Platform)'=='Release Nuget|AnyCPU'">
+    <Exec Command="&quot;CopyPackage.exe&quot; &quot;..\..\_packages&quot; &quot;$(MSBuildProjectFullPath)&quot; &quot;$(Configuration)&quot;" WorkingDirectory="_tools\CopyPackage" />
+  </Target>
 
   <ItemGroup>
     <None Include="LICENSE">

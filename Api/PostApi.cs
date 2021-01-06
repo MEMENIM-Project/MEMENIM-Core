@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Memenim.Core.Schema;
 
@@ -7,6 +8,31 @@ namespace Memenim.Core.Api
 {
     public static class PostApi
     {
+        public static ReadOnlyDictionary<int, PostCategorySchema> PostCategories { get; private set; }
+
+        static PostApi()
+        {
+            ApiResponse<List<PostCategorySchema>> result;
+
+            do
+            {
+                result = GetPostCategories().Result;
+            } while (result?.error != false);
+
+            var postCategories =
+                new Dictionary<int, PostCategorySchema>(result.data.Count);
+
+            foreach (var postCategory in result.data)
+            {
+                postCategories.Add(
+                    postCategory.id,
+                    postCategory);
+            }
+
+            PostCategories =
+                new ReadOnlyDictionary<int, PostCategorySchema>(postCategories);
+        }
+
         public static Task<ApiResponse<List<PostSchema>>> Get(
             PostType type = PostType.Popular, int count = 20, int offset = 0)
         {
@@ -218,6 +244,16 @@ namespace Memenim.Core.Api
             };
 
             return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeDelete", requestData, token);
+        }
+
+        public static Task<ApiResponse<List<PostCategorySchema>>> GetPostCategories()
+        {
+            var requestData = new
+            {
+                count = uint.MaxValue
+            };
+
+            return ApiRequestEngine.ExecuteRequestJson<List<PostCategorySchema>>("posts/getCategories", requestData);
         }
 
 
