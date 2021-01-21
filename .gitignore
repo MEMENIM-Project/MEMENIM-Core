@@ -362,4 +362,4 @@ _tools/PublishPackages/*.log
 .git/
 .vs/
 .idea/
-_packages/
+_packages/*.nupkg

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Memenim.Core.Api;
 
 // ReSharper disable InconsistentNaming
@@ -13,10 +11,8 @@ namespace Memenim.Core.Schema
 {
     //UserApi
 
-    public class IdSchema : INotifyPropertyChanged
+    public class IdSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -30,17 +26,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(id));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class RocketPasswordSchema : INotifyPropertyChanged
+    public class RocketPasswordSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private string _password = string.Empty;
         public string password
         {
@@ -54,17 +43,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(password));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class AuthSchema : INotifyPropertyChanged
+    public class AuthSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -91,17 +73,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(token));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class UserSchema : INotifyPropertyChanged
+    public class UserSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -154,17 +129,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(online));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class SearchedUserSchema : INotifyPropertyChanged
+    public class SearchedUserSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -321,17 +289,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(online));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class ProfileSchema : INotifyPropertyChanged
+    public class ProfileSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -592,7 +553,7 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(banner));
             }
         }
-        public int _status;
+        private int _status;
         public int status
         {
             get
@@ -605,19 +566,12 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(status));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
     //PostApi
 
-    public class PostCategorySchema
+    public class PostCategorySchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -644,17 +598,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(text));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class RectangleSchema : INotifyPropertyChanged
+    public class RectangleSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _width;
         public int width
         {
@@ -681,17 +628,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(height));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class PhotoSizeSchema : INotifyPropertyChanged
+    public class PhotoSizeSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private RectangleSchema _photo_small = new RectangleSchema();
         public RectangleSchema photo_small
         {
@@ -731,17 +671,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(photo_big));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class PhotoSchema : INotifyPropertyChanged
+    public class PhotoSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private string _photo_small = string.Empty;
         public string photo_small
         {
@@ -794,17 +727,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(size));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class StatisticSchema : INotifyPropertyChanged
+    public class StatisticSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _count;
         public int count
         {
@@ -831,17 +757,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(my));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class AttachmentSchema : INotifyPropertyChanged
+    public class AttachmentSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private string _link;
         public string link
         {
@@ -881,17 +800,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(type));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class PostEditSchema : INotifyPropertyChanged
+    public class PostEditSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -1026,17 +938,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(author_watch));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class PostSchema : INotifyPropertyChanged
+    public class PostSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public PostSchema()
         {
             attachments.CollectionChanged += (sender, args) =>
@@ -1245,7 +1150,7 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(author_watch));
             }
         }
-        public int _status;
+        private int _status;
         public int status
         {
             get
@@ -1353,19 +1258,12 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(attachments));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
 
 
-    public class CountSchema : INotifyPropertyChanged
+    public class CountSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _count;
         public int count
         {
@@ -1379,17 +1277,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(count));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class CommentUserSchema : INotifyPropertyChanged
+    public class CommentUserSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -1429,17 +1320,10 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(photo));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
-    public class CommentSchema : INotifyPropertyChanged
+    public class CommentSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -1531,19 +1415,12 @@ namespace Memenim.Core.Schema
                 OnPropertyChanged(nameof(dislikes));
             }
         }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 
     //PhotoApi
 
-    public class LibraryPhotoSchema : INotifyPropertyChanged
+    public class LibraryPhotoSchema : BaseSchema
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private int _id = -1;
         public int id
         {
@@ -1595,11 +1472,6 @@ namespace Memenim.Core.Schema
                 _photo_big = value;
                 OnPropertyChanged(nameof(photo_big));
             }
-        }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
