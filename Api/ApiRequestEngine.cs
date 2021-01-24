@@ -68,7 +68,7 @@ namespace Memenim.Core.Api
         internal static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data = null,
             string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
-            var connectionFailed = false;
+            var connectionWasReset = false;
 
             while (true)
             {
@@ -123,7 +123,7 @@ namespace Memenim.Core.Api
                     var result = await httpResponse.Content.ReadAsStringAsync()
                         .ConfigureAwait(false);
 
-                    if (!connectionFailed)
+                    if (connectionWasReset)
                     {
                         ConnectionStateChanged?.Invoke(null,
                             new ConnectionStateChangedEventArgs(ConnectionState.Connected));
@@ -133,7 +133,7 @@ namespace Memenim.Core.Api
                 }
                 catch (HttpRequestException)
                 {
-                    connectionFailed = true;
+                    connectionWasReset = true;
 
                     ConnectionStateChanged?.Invoke(null,
                         new ConnectionStateChangedEventArgs(ConnectionState.Disconnected));
