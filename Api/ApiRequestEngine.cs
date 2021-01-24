@@ -8,8 +8,10 @@ using Newtonsoft.Json;
 
 namespace Memenim.Core.Api
 {
-    internal static class ApiRequestEngine
+    public static class ApiRequestEngine
     {
+        public static event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
+
 #if NETCOREAPP
         private static readonly SocketsHttpHandler HttpHandler;
 #elif NETSTANDARD
@@ -41,7 +43,16 @@ namespace Memenim.Core.Api
             };
         }
 
-        public static async Task<ApiResponse> ExecuteRequestJson(string request, object data,
+        public static void OnConnectionStateChanged(ConnectionStateChangedEventArgs e)
+        {
+            OnConnectionStateChanged(null, e);
+        }
+        public static void OnConnectionStateChanged(object sender, ConnectionStateChangedEventArgs e)
+        {
+            ConnectionStateChanged?.Invoke(sender, e);
+        }
+
+        internal static async Task<ApiResponse> ExecuteRequestJson(string request, object data,
             string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
             var response = await ExecuteRequestJson<object>(request, data, token, type, endPoint)
@@ -54,59 +65,83 @@ namespace Memenim.Core.Api
                 message = response.message
             };
         }
-        public static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data = null,
+        internal static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data = null,
             string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
-            var httpRequest = new HttpRequestMessage();
-            HttpResponseMessage httpResponse;
+            var connectionFailed = false;
 
-            httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            if (!string.IsNullOrEmpty(token))
-                httpRequest.Headers.Authorization = new AuthenticationHeaderValue(token);
-
-            if (endPoint == null)
-                endPoint = ApiEndPoint.GeneralPublic;
-
-            httpRequest.RequestUri = new Uri(endPoint.Url + request);
-
-            switch (type)
+            while (true)
             {
-                case RequestType.Get:
+                try
                 {
-                    httpRequest.Method = HttpMethod.Get;
-                    httpRequest.Content = null;
+                    var httpRequest = new HttpRequestMessage();
+                    HttpResponseMessage httpResponse;
 
-                    httpResponse = await HttpClient.SendAsync(httpRequest)
-                        .ConfigureAwait(false);
+                    httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    break;
-                }
-                case RequestType.Post:
-                default:
-                {
-                    StringContent content = null;
+                    if (!string.IsNullOrEmpty(token))
+                        httpRequest.Headers.Authorization = new AuthenticationHeaderValue(token);
 
-                    if (data != null)
+                    if (endPoint == null)
+                        endPoint = ApiEndPoint.GeneralPublic;
+
+                    httpRequest.RequestUri = new Uri(endPoint.Url + request);
+
+                    switch (type)
                     {
-                        var json = JsonConvert.SerializeObject(data);
-                        content = new StringContent(json, Encoding.UTF8, "application/json");
+                        case RequestType.Get:
+                        {
+                            httpRequest.Method = HttpMethod.Get;
+                            httpRequest.Content = null;
+
+                            httpResponse = await HttpClient.SendAsync(httpRequest)
+                                .ConfigureAwait(false);
+
+                            break;
+                        }
+                        case RequestType.Post:
+                        default:
+                        {
+                            StringContent content = null;
+
+                            if (data != null)
+                            {
+                                var json = JsonConvert.SerializeObject(data);
+                                content = new StringContent(json, Encoding.UTF8, "application/json");
+                            }
+
+                            httpRequest.Method = HttpMethod.Post;
+                            httpRequest.Content = content;
+
+                            httpResponse = await HttpClient.SendAsync(httpRequest)
+                                .ConfigureAwait(false);
+
+                            break;
+                        }
                     }
 
-                    httpRequest.Method = HttpMethod.Post;
-                    httpRequest.Content = content;
-
-                    httpResponse = await HttpClient.SendAsync(httpRequest)
+                    var result = await httpResponse.Content.ReadAsStringAsync()
                         .ConfigureAwait(false);
 
-                    break;
+                    if (!connectionFailed)
+                    {
+                        ConnectionStateChanged?.Invoke(null,
+                            new ConnectionStateChangedEventArgs(ConnectionState.Connected));
+                    }
+
+                    return JsonConvert.DeserializeObject<ApiResponse<T>>(result);
+                }
+                catch (HttpRequestException)
+                {
+                    connectionFailed = true;
+
+                    ConnectionStateChanged?.Invoke(null,
+                        new ConnectionStateChangedEventArgs(ConnectionState.Disconnected));
+
+                    await Task.Delay(TimeSpan.FromSeconds(1))
+                        .ConfigureAwait(false);
                 }
             }
-
-            var result = await httpResponse.Content.ReadAsStringAsync()
-                .ConfigureAwait(false);
-
-            return JsonConvert.DeserializeObject<ApiResponse<T>>(result);
         }
     }
 }

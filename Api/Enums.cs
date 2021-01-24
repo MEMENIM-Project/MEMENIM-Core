@@ -7,4 +7,10 @@ namespace Memenim.Core.Api
         Get = 1,
         Post = 2
     }
+
+    public enum ConnectionState : byte
+    {
+        Connected = 1,
+        Disconnected = 2
+    }
 }
