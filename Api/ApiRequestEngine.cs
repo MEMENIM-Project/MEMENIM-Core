@@ -150,7 +150,37 @@ namespace Memenim.Core.Api
 
                     OnConnectionStateChanged(ConnectionStateType.Connected);
 
-                    return JsonConvert.DeserializeObject<ApiResponse<T>>(result);
+                    //Pasha, I love you ( no :)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) )
+                    //The best API in the world
+                    try
+                    {
+                        return JsonConvert.DeserializeObject<ApiResponse<T>>(result);
+                    }
+                    catch (JsonSerializationException)
+                    {
+                        try
+                        {
+                            var response = JsonConvert.DeserializeObject<ApiResponse>(result);
+
+                            return new ApiResponse<T>
+                            {
+                                code = response.code,
+                                error = response.error,
+                                data = default,
+                                message = response.message
+                            };
+                        }
+                        catch (JsonSerializationException)
+                        {
+                            return new ApiResponse<T>
+                            {
+                                code = 403,
+                                error = true,
+                                data = default,
+                                message = "Forbidden beta. Pasha broke everything again"
+                            };
+                        }
+                    }
                 }
                 catch (HttpRequestException)
                 {
