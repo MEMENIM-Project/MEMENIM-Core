@@ -4,10 +4,13 @@ namespace Memenim.Core.Api
 {
     public class ConnectionStateChangedEventArgs : EventArgs
     {
-        public ConnectionState NewState { get; }
+        public ConnectionStateType OldState { get; }
+        public ConnectionStateType NewState { get; }
 
-        public ConnectionStateChangedEventArgs(ConnectionState newState)
+        public ConnectionStateChangedEventArgs(ConnectionStateType oldState,
+            ConnectionStateType newState)
         {
+            OldState = oldState;
             NewState = newState;
         }
     }

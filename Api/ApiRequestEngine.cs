@@ -20,6 +20,15 @@ namespace Memenim.Core.Api
         private static readonly HttpClient HttpClient;
         private static readonly JsonSerializerSettings JsonSettings;
 
+        private static volatile ConnectionStateType _connectionState;
+        public static ConnectionStateType ConnectionState
+        {
+            get
+            {
+                return _connectionState;
+            }
+        }
+
         static ApiRequestEngine()
         {
 #if NETCOREAPP
@@ -41,13 +50,31 @@ namespace Memenim.Core.Api
             {
                 EqualityComparer = StringComparer.OrdinalIgnoreCase
             };
+
+            _connectionState = ConnectionStateType.Connected;
         }
 
-        public static void OnConnectionStateChanged(ConnectionStateChangedEventArgs e)
+        public static void OnConnectionStateChanged(ConnectionStateType newState)
+        {
+            OnConnectionStateChanged(null, newState);
+        }
+        public static void OnConnectionStateChanged(object sender, ConnectionStateType newState)
+        {
+            if (_connectionState == newState)
+                return;
+
+            var oldState = _connectionState;
+            _connectionState = newState;
+
+            ConnectionStateChanged?.Invoke(sender,
+                new ConnectionStateChangedEventArgs(oldState, newState));
+        }
+
+        private static void OnConnectionStateChanged(ConnectionStateChangedEventArgs e)
         {
             OnConnectionStateChanged(null, e);
         }
-        public static void OnConnectionStateChanged(object sender, ConnectionStateChangedEventArgs e)
+        private static void OnConnectionStateChanged(object sender, ConnectionStateChangedEventArgs e)
         {
             ConnectionStateChanged?.Invoke(sender, e);
         }
@@ -68,8 +95,6 @@ namespace Memenim.Core.Api
         internal static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data = null,
             string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
-            var connectionWasReset = false;
-
             while (true)
             {
                 try
@@ -123,20 +148,13 @@ namespace Memenim.Core.Api
                     var result = await httpResponse.Content.ReadAsStringAsync()
                         .ConfigureAwait(false);
 
-                    if (connectionWasReset)
-                    {
-                        ConnectionStateChanged?.Invoke(null,
-                            new ConnectionStateChangedEventArgs(ConnectionState.Connected));
-                    }
+                    OnConnectionStateChanged(ConnectionStateType.Connected);
 
                     return JsonConvert.DeserializeObject<ApiResponse<T>>(result);
                 }
                 catch (HttpRequestException)
                 {
-                    connectionWasReset = true;
-
-                    ConnectionStateChanged?.Invoke(null,
-                        new ConnectionStateChangedEventArgs(ConnectionState.Disconnected));
+                    OnConnectionStateChanged(ConnectionStateType.Disconnected);
 
                     await Task.Delay(TimeSpan.FromSeconds(1))
                         .ConfigureAwait(false);

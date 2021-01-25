@@ -8,7 +8,7 @@ namespace Memenim.Core.Api
         Post = 2
     }
 
-    public enum ConnectionState : byte
+    public enum ConnectionStateType : byte
     {
         Connected = 1,
         Disconnected = 2
