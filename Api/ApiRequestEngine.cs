@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Memenim.Core.Schema;
 using Newtonsoft.Json;
@@ -20,12 +22,16 @@ namespace Memenim.Core.Api
         private static readonly HttpClient HttpClient;
         private static readonly JsonSerializerSettings JsonSettings;
 
-        private static volatile ConnectionStateType _connectionState;
+        private static int _connectionState;
         public static ConnectionStateType ConnectionState
         {
             get
             {
-                return _connectionState;
+                return (ConnectionStateType)_connectionState;
+            }
+            private set
+            {
+                Interlocked.Exchange(ref _connectionState, (int)value);
             }
         }
 
@@ -51,7 +57,7 @@ namespace Memenim.Core.Api
                 EqualityComparer = StringComparer.OrdinalIgnoreCase
             };
 
-            _connectionState = ConnectionStateType.Connected;
+            ConnectionState = ConnectionStateType.Connected;
         }
 
         public static void OnConnectionStateChanged(ConnectionStateType newState)
@@ -60,14 +66,13 @@ namespace Memenim.Core.Api
         }
         public static void OnConnectionStateChanged(object sender, ConnectionStateType newState)
         {
-            if (_connectionState == newState)
+            var oldState = Interlocked.Exchange(ref _connectionState, (int)newState);
+
+            if (oldState == (int)newState)
                 return;
 
-            var oldState = _connectionState;
-            _connectionState = newState;
-
             ConnectionStateChanged?.Invoke(sender,
-                new ConnectionStateChangedEventArgs(oldState, newState));
+                new ConnectionStateChangedEventArgs((ConnectionStateType)oldState, newState));
         }
 
         private static void OnConnectionStateChanged(ConnectionStateChangedEventArgs e)
@@ -79,7 +84,7 @@ namespace Memenim.Core.Api
             ConnectionStateChanged?.Invoke(sender, e);
         }
 
-        internal static async Task<ApiResponse> ExecuteRequestJson(string request, object data,
+        internal static async Task<ApiResponse> ExecuteRequestJson(string request, object data = null,
             string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
             var response = await ExecuteRequestJson<object>(request, data, token, type, endPoint)
@@ -148,38 +153,58 @@ namespace Memenim.Core.Api
                     var result = await httpResponse.Content.ReadAsStringAsync()
                         .ConfigureAwait(false);
 
-                    OnConnectionStateChanged(ConnectionStateType.Connected);
-
-                    //Pasha, I love you ( no :)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) )
+                    //Pasha Lyubin, I love you ( no :)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) )
                     //The best API in the world
                     try
                     {
-                        return JsonConvert.DeserializeObject<ApiResponse<T>>(result);
+                        var resultResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(result);
+
+                        OnConnectionStateChanged(ConnectionStateType.Connected);
+
+                        return resultResponse;
                     }
                     catch (JsonSerializationException)
                     {
                         try
                         {
-                            var response = JsonConvert.DeserializeObject<ApiResponse>(result);
+                            var resultResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
+
+                            OnConnectionStateChanged(ConnectionStateType.Connected);
 
                             return new ApiResponse<T>
                             {
-                                code = response.code,
-                                error = response.error,
+                                code = resultResponse.code,
+                                error = resultResponse.error,
                                 data = default,
-                                message = response.message
+                                message = resultResponse.message
                             };
                         }
                         catch (JsonSerializationException)
                         {
+                            OnConnectionStateChanged(ConnectionStateType.Connected);
+
                             return new ApiResponse<T>
                             {
-                                code = 403,
+                                code = (int)httpResponse.StatusCode,
                                 error = true,
                                 data = default,
-                                message = "Forbidden beta. Pasha broke everything again"
+                                message = "Forbidden beta. Pasha Lyubin broke everything again"
                             };
                         }
+                        catch (JsonReaderException)
+                        {
+                            OnConnectionStateChanged(ConnectionStateType.Disconnected);
+
+                            await Task.Delay(TimeSpan.FromSeconds(3))
+                                .ConfigureAwait(false);
+                        }
+                    }
+                    catch (JsonReaderException)
+                    {
+                        OnConnectionStateChanged(ConnectionStateType.Disconnected);
+
+                        await Task.Delay(TimeSpan.FromSeconds(3))
+                            .ConfigureAwait(false);
                     }
                 }
                 catch (HttpRequestException)
