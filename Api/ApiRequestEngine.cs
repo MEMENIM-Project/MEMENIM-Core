@@ -11,8 +11,13 @@ namespace Memenim.Core.Api
 {
     public static class ApiRequestEngine
     {
+        public static event EventHandler<CoreInformationEventArgs> Information;
+        public static event EventHandler<CoreWarningEventArgs> Warning;
+        public static event EventHandler<CoreErrorEventArgs> Error;
+
         public static event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
 
+        private static readonly Random RandomGenerator;
 #if NETCOREAPP
         private static readonly SocketsHttpHandler HttpHandler;
 #elif NETSTANDARD
@@ -36,6 +41,8 @@ namespace Memenim.Core.Api
 
         static ApiRequestEngine()
         {
+            RandomGenerator = new Random(Environment.TickCount);
+
 #if NETCOREAPP
             HttpHandler = new SocketsHttpHandler
             {
@@ -47,6 +54,7 @@ namespace Memenim.Core.Api
                 MaxConnectionsPerServer = int.MaxValue
             };
 #endif
+
             HttpClient = new HttpClient(HttpHandler)
             {
                 Timeout = TimeSpan.FromMinutes(5)
@@ -57,6 +65,33 @@ namespace Memenim.Core.Api
             };
 
             ConnectionState = ConnectionStateType.Connected;
+        }
+
+        public static void OnInformation(CoreInformationEventArgs e)
+        {
+            OnInformation(null, e);
+        }
+        public static void OnInformation(object sender, CoreInformationEventArgs e)
+        {
+            Information?.Invoke(sender, e);
+        }
+
+        public static void OnWarning(CoreWarningEventArgs e)
+        {
+            OnWarning(null, e);
+        }
+        public static void OnWarning(object sender, CoreWarningEventArgs e)
+        {
+            Warning?.Invoke(sender, e);
+        }
+
+        public static void OnError(CoreErrorEventArgs e)
+        {
+            OnError(null, e);
+        }
+        public static void OnError(object sender, CoreErrorEventArgs e)
+        {
+            Error?.Invoke(sender, e);
         }
 
         public static void OnConnectionStateChanged(ConnectionStateType newState)
@@ -115,6 +150,7 @@ namespace Memenim.Core.Api
                         endPoint = ApiEndPoint.GeneralPublic;
 
                     httpRequest.RequestUri = new Uri(endPoint.Url + request);
+                    string jsonData = string.Empty;
 
                     switch (type)
                     {
@@ -135,8 +171,8 @@ namespace Memenim.Core.Api
 
                             if (data != null)
                             {
-                                var json = JsonConvert.SerializeObject(data);
-                                content = new StringContent(json, Encoding.UTF8, "application/json");
+                                jsonData = JsonConvert.SerializeObject(data);
+                                content = new StringContent(jsonData, Encoding.UTF8, "application/json");
                             }
 
                             httpRequest.Method = HttpMethod.Post;
@@ -154,21 +190,43 @@ namespace Memenim.Core.Api
 
                     //Pasha Lyubin, I love you ( no :)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) )
                     //The best API in the world
+
+                    int resultCode;
+
+                    try
+                    {
+                        resultCode = (int)httpResponse.StatusCode;
+                    }
+                    catch (Exception)
+                    {
+                        resultCode = -1;
+                    }
+
                     try
                     {
                         var resultResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(result);
 
                         OnConnectionStateChanged(ConnectionStateType.Connected);
 
+                        OnInformation(null, new CoreInformationEventArgs(
+                            $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response success. " +
+                            $"\nCode={resultCode}"));
+
                         return resultResponse;
                     }
-                    catch (JsonSerializationException)
+                    catch (JsonSerializationException ex)
                     {
                         try
                         {
                             var resultResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
                             OnConnectionStateChanged(ConnectionStateType.Connected);
+
+                            OnError(null, new CoreErrorEventArgs(
+                                ex,
+                                $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response serialization error. " +
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}",
+                                ex.StackTrace));
 
                             return new ApiResponse<T>
                             {
@@ -178,37 +236,87 @@ namespace Memenim.Core.Api
                                 message = resultResponse.message
                             };
                         }
-                        catch (JsonSerializationException)
+                        catch (JsonSerializationException ex2)
                         {
                             OnConnectionStateChanged(ConnectionStateType.Connected);
 
+                            OnError(null, new CoreErrorEventArgs(
+                                ex2,
+                                $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response serialization error. " +
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}",
+                                ex2.StackTrace));
+
                             return new ApiResponse<T>
                             {
-                                code = (int)httpResponse.StatusCode,
+                                code = resultCode,
                                 error = true,
                                 data = default,
                                 message = "Forbidden beta. Pasha Lyubin broke everything again"
                             };
                         }
-                        catch (JsonReaderException)
+                        catch (JsonReaderException ex2)
+                            when (resultCode == 429)
+                        {
+                            OnError(null, new CoreErrorEventArgs(
+                                ex2,
+                                $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] rejected (too many requests). " +
+                                $"\nCode={resultCode}",
+                                ex2.StackTrace));
+
+                            await Task.Delay(TimeSpan.FromMilliseconds(
+                                    RandomGenerator.Next(300, 1500)))
+                                .ConfigureAwait(false);
+                        }
+                        catch (JsonReaderException ex2)
                         {
                             OnConnectionStateChanged(ConnectionStateType.Disconnected);
+
+                            OnError(null, new CoreErrorEventArgs(
+                                ex2,
+                                $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response read error. " +
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}",
+                                ex2.StackTrace));
 
                             await Task.Delay(TimeSpan.FromSeconds(3))
                                 .ConfigureAwait(false);
                         }
                     }
-                    catch (JsonReaderException)
+                    catch (JsonReaderException ex)
+                        when (resultCode == 429)
+                    {
+                        OnError(null, new CoreErrorEventArgs(
+                            ex,
+                            $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] rejected (too many requests). " +
+                            $"\nCode={resultCode}",
+                            ex.StackTrace));
+
+                        await Task.Delay(TimeSpan.FromMilliseconds(
+                                RandomGenerator.Next(300, 1500)))
+                            .ConfigureAwait(false);
+                    }
+                    catch (JsonReaderException ex)
                     {
                         OnConnectionStateChanged(ConnectionStateType.Disconnected);
+
+                        OnError(null, new CoreErrorEventArgs(
+                            ex,
+                            $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response read error. " +
+                            $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}",
+                            ex.StackTrace));
 
                         await Task.Delay(TimeSpan.FromSeconds(3))
                             .ConfigureAwait(false);
                     }
                 }
-                catch (HttpRequestException)
+                catch (HttpRequestException ex)
                 {
                     OnConnectionStateChanged(ConnectionStateType.Disconnected);
+
+                    OnError(null, new CoreErrorEventArgs(
+                        ex,
+                        $"Request[Uri={(endPoint == null ? ApiEndPoint.GeneralPublic.Url : endPoint.Url) + request}] " +
+                        "sending error.",
+                        ex.StackTrace));
 
                     await Task.Delay(TimeSpan.FromSeconds(1))
                         .ConfigureAwait(false);
