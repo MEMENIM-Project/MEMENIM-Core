@@ -94,12 +94,14 @@ namespace Memenim.Core.Api
             var response = await ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData, token)
                 .ConfigureAwait(false);
 
+            var data = response.data != null && response.data.Count != 0
+                ? response.data[0]
+                : null;
+
             return new ApiResponse<PostSchema>
             {
                 code = response.code,
-                data = response.data.Count != 0
-                    ? response.data[0]
-                    : null,
+                data = data,
                 error = response.error,
                 message = response.message
             };

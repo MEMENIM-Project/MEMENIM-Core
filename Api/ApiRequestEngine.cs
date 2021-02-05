@@ -225,7 +225,7 @@ namespace Memenim.Core.Api
                             OnError(null, new CoreErrorEventArgs(
                                 ex,
                                 $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response serialization error. " +
-                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}",
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n",
                                 ex.StackTrace));
 
                             return new ApiResponse<T>
@@ -243,7 +243,7 @@ namespace Memenim.Core.Api
                             OnError(null, new CoreErrorEventArgs(
                                 ex2,
                                 $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response serialization error. " +
-                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}",
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n",
                                 ex2.StackTrace));
 
                             return new ApiResponse<T>
@@ -274,7 +274,7 @@ namespace Memenim.Core.Api
                             OnError(null, new CoreErrorEventArgs(
                                 ex2,
                                 $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response read error. " +
-                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}",
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n",
                                 ex2.StackTrace));
 
                             await Task.Delay(TimeSpan.FromSeconds(3))
@@ -301,7 +301,7 @@ namespace Memenim.Core.Api
                         OnError(null, new CoreErrorEventArgs(
                             ex,
                             $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response read error. " +
-                            $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}",
+                            $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n",
                             ex.StackTrace));
 
                         await Task.Delay(TimeSpan.FromSeconds(3))

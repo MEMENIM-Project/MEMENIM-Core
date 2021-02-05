@@ -55,9 +55,7 @@ namespace Memenim.Core.Api
             return new ApiResponse<int?>
             {
                 code = response.code,
-                data = response.data != null
-                    ? (int?)response.data.id
-                    : null,
+                data = response.data?.id,
                 error = response.error,
                 message = response.message
             };
@@ -111,12 +109,14 @@ namespace Memenim.Core.Api
             var response = await ApiRequestEngine.ExecuteRequestJson<List<UserSchema>>("users/getById", requestData)
                 .ConfigureAwait(false);
 
+            var data = response.data != null && response.data.Count != 0
+                ? response.data[0]
+                : null;
+
             return new ApiResponse<UserSchema>
             {
                 code = response.code,
-                data = response.data.Count != 0
-                    ? response.data[0]
-                    : null,
+                data = data,
                 error = response.error,
                 message = response.message
             };
@@ -163,12 +163,14 @@ namespace Memenim.Core.Api
             var response = await ApiRequestEngine.ExecuteRequestJson<List<ProfileSchema>>("users/profile/getById", requestData)
                 .ConfigureAwait(false);
 
+            var data = response.data != null && response.data.Count != 0
+                ? response.data[0]
+                : null;
+
             return new ApiResponse<ProfileSchema>
             {
                 code = response.code,
-                data = response.data.Count != 0
-                    ? response.data[0]
-                    : null,
+                data = data,
                 error = response.error,
                 message = response.message
             };
