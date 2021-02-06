@@ -54,10 +54,10 @@ namespace Memenim.Core.Api
 
             return new ApiResponse<int?>
             {
-                code = response.code,
-                data = response.data?.id,
-                error = response.error,
-                message = response.message
+                Code = response.Code,
+                Data = response.Data?.Id,
+                IsError = response.IsError,
+                Message = response.Message
             };
         }
 
@@ -79,20 +79,20 @@ namespace Memenim.Core.Api
             ApiResponse<int?> idResponse = await GetId(token)
                 .ConfigureAwait(false);
 
-            if (idResponse.error || !idResponse.data.HasValue)
+            if (idResponse.IsError || !idResponse.Data.HasValue)
             {
                 return new ApiResponse<UserSchema>
                 {
-                    code = idResponse.code,
-                    data = null,
-                    error = true,
-                    message = string.IsNullOrEmpty(idResponse.message)
+                    Code = idResponse.Code,
+                    Data = null,
+                    IsError = true,
+                    Message = string.IsNullOrEmpty(idResponse.Message)
                         ? "user id is not valid"
-                        : idResponse.message
+                        : idResponse.Message
                 };
             }
 
-            return await GetUserById(idResponse.data.Value)
+            return await GetUserById(idResponse.Data.Value)
                 .ConfigureAwait(false);
         }
 
@@ -109,16 +109,16 @@ namespace Memenim.Core.Api
             var response = await ApiRequestEngine.ExecuteRequestJson<List<UserSchema>>("users/getById", requestData)
                 .ConfigureAwait(false);
 
-            var data = response.data != null && response.data.Count != 0
-                ? response.data[0]
+            var data = response.Data != null && response.Data.Count != 0
+                ? response.Data[0]
                 : null;
 
             return new ApiResponse<UserSchema>
             {
-                code = response.code,
-                data = data,
-                error = response.error,
-                message = response.message
+                Code = response.Code,
+                Data = data,
+                IsError = response.IsError,
+                Message = response.Message
             };
         }
         public static Task<ApiResponse<List<UserSchema>>> GetUserById(int[] ids)
@@ -136,20 +136,20 @@ namespace Memenim.Core.Api
             ApiResponse<int?> idResponse = await GetId(token)
                 .ConfigureAwait(false);
 
-            if (idResponse.error || !idResponse.data.HasValue)
+            if (idResponse.IsError || !idResponse.Data.HasValue)
             {
                 return new ApiResponse<ProfileSchema>
                 {
-                    code = idResponse.code,
-                    data = null,
-                    error = true,
-                    message = string.IsNullOrEmpty(idResponse.message)
+                    Code = idResponse.Code,
+                    Data = null,
+                    IsError = true,
+                    Message = string.IsNullOrEmpty(idResponse.Message)
                         ? "user id is not valid"
-                        : idResponse.message
+                        : idResponse.Message
                 };
             }
 
-            return await GetProfileById(idResponse.data.Value)
+            return await GetProfileById(idResponse.Data.Value)
                 .ConfigureAwait(false);
         }
 
@@ -157,22 +157,22 @@ namespace Memenim.Core.Api
         {
             var requestData = new IdSchema
             {
-                id = id
+                Id = id
             };
 
             var response = await ApiRequestEngine.ExecuteRequestJson<List<ProfileSchema>>("users/profile/getById", requestData)
                 .ConfigureAwait(false);
 
-            var data = response.data != null && response.data.Count != 0
-                ? response.data[0]
+            var data = response.Data != null && response.Data.Count != 0
+                ? response.Data[0]
                 : null;
 
             return new ApiResponse<ProfileSchema>
             {
-                code = response.code,
-                data = data,
-                error = response.error,
-                message = response.message
+                Code = response.Code,
+                Data = data,
+                IsError = response.IsError,
+                Message = response.Message
             };
         }
 

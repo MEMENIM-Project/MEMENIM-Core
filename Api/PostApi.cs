@@ -17,15 +17,15 @@ namespace Memenim.Core.Api
             do
             {
                 result = GetPostCategories().Result;
-            } while (result?.error != false);
+            } while (result?.IsError != false);
 
             var postCategories =
-                new Dictionary<int, PostCategorySchema>(result.data.Count);
+                new Dictionary<int, PostCategorySchema>(result.Data.Count);
 
-            foreach (var postCategory in result.data)
+            foreach (var postCategory in result.Data)
             {
                 postCategories.Add(
-                    postCategory.id,
+                    postCategory.Id,
                     postCategory);
             }
 
@@ -71,14 +71,16 @@ namespace Memenim.Core.Api
             var response = await ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData)
                 .ConfigureAwait(false);
 
+            var data = response.Data != null && response.Data.Count != 0
+                ? response.Data[0]
+                : null;
+
             return new ApiResponse<PostSchema>
             {
-                code = response.code,
-                data = response.data.Count != 0
-                    ? response.data[0]
-                    : null,
-                error = response.error,
-                message = response.message
+                Code = response.Code,
+                Data = data,
+                IsError = response.IsError,
+                Message = response.Message
             };
         }
         public static async Task<ApiResponse<PostSchema>> GetById(string token, int id)
@@ -94,16 +96,16 @@ namespace Memenim.Core.Api
             var response = await ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData, token)
                 .ConfigureAwait(false);
 
-            var data = response.data != null && response.data.Count != 0
-                ? response.data[0]
+            var data = response.Data != null && response.Data.Count != 0
+                ? response.Data[0]
                 : null;
 
             return new ApiResponse<PostSchema>
             {
-                code = response.code,
-                data = data,
-                error = response.error,
-                message = response.message
+                Code = response.Code,
+                Data = data,
+                IsError = response.IsError,
+                Message = response.Message
             };
         }
         public static Task<ApiResponse<List<PostSchema>>> GetById(int[] ids)

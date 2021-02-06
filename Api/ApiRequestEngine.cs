@@ -126,9 +126,9 @@ namespace Memenim.Core.Api
 
             return new ApiResponse
             {
-                code = response.code,
-                error = response.error,
-                message = response.message
+                Code = response.Code,
+                IsError = response.IsError,
+                Message = response.Message
             };
         }
         internal static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data = null,
@@ -230,10 +230,10 @@ namespace Memenim.Core.Api
 
                             return new ApiResponse<T>
                             {
-                                code = resultResponse.code,
-                                error = resultResponse.error,
-                                data = default,
-                                message = resultResponse.message
+                                Code = resultResponse.Code,
+                                IsError = resultResponse.IsError,
+                                Data = default,
+                                Message = resultResponse.Message
                             };
                         }
                         catch (JsonSerializationException ex2)
@@ -248,10 +248,10 @@ namespace Memenim.Core.Api
 
                             return new ApiResponse<T>
                             {
-                                code = resultCode,
-                                error = true,
-                                data = default,
-                                message = "Forbidden beta. Pasha Lyubin broke everything again"
+                                Code = resultCode,
+                                IsError = true,
+                                Data = default,
+                                Message = "Forbidden beta. Pasha Lyubin broke everything again"
                             };
                         }
                         catch (JsonReaderException ex2)

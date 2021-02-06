@@ -4,9 +4,10 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using Memenim.Core.Api;
+using Newtonsoft.Json;
 
-// ReSharper disable InconsistentNaming
-#pragma warning disable IDE1006 // Стили именования
+#pragma warning disable IDE0051 // Remove unused private member
+#pragma warning disable RCS1213 // Remove unused member declaration.
 namespace Memenim.Core.Schema
 {
     //UserApi
@@ -14,7 +15,8 @@ namespace Memenim.Core.Schema
     public class IdSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -23,7 +25,7 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
     }
@@ -31,7 +33,8 @@ namespace Memenim.Core.Schema
     public class RocketPasswordSchema : BaseSchema
     {
         private string _password = string.Empty;
-        public string password
+        [JsonProperty("password")]
+        public string Password
         {
             get
             {
@@ -40,7 +43,7 @@ namespace Memenim.Core.Schema
             set
             {
                 _password = value;
-                OnPropertyChanged(nameof(password));
+                OnPropertyChanged(nameof(Password));
             }
         }
     }
@@ -48,7 +51,8 @@ namespace Memenim.Core.Schema
     public class AuthSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -57,11 +61,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
+
         private string _token;
-        public string token
+        [JsonProperty("token")]
+        public string Token
         {
             get
             {
@@ -70,7 +76,7 @@ namespace Memenim.Core.Schema
             set
             {
                 _token = value;
-                OnPropertyChanged(nameof(token));
+                OnPropertyChanged(nameof(Token));
             }
         }
     }
@@ -78,7 +84,8 @@ namespace Memenim.Core.Schema
     public class UserSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -87,11 +94,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
+
         private string _login = string.Empty;
-        public string login
+        [JsonProperty("login")]
+        public string Login
         {
             get
             {
@@ -100,33 +109,50 @@ namespace Memenim.Core.Schema
             set
             {
                 _login = value;
-                OnPropertyChanged(nameof(login));
+                OnPropertyChanged(nameof(Login));
             }
         }
-        private string _name = string.Empty;
-        public string name
+
+        private string _nickname = string.Empty;
+        [JsonProperty("name")]
+        public string Nickname
         {
             get
             {
-                return _name;
+                return _nickname;
             }
             set
             {
-                _name = value;
-                OnPropertyChanged(nameof(name));
+                _nickname = value;
+                OnPropertyChanged(nameof(Nickname));
             }
         }
-        private int _online = -1;
-        public int online
+
+        private int _isOnlineOriginal;
+        [JsonProperty("online")]
+        private int IsOnlineOriginal
         {
             get
             {
-                return _online;
+                return _isOnlineOriginal;
             }
             set
             {
-                _online = value;
-                OnPropertyChanged(nameof(online));
+                _isOnlineOriginal = value;
+                OnPropertyChanged(nameof(IsOnline));
+            }
+        }
+        [JsonIgnore]
+        public bool IsOnline
+        {
+            get
+            {
+                return _isOnlineOriginal != 0;
+            }
+            set
+            {
+                _isOnlineOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsOnline));
             }
         }
     }
@@ -134,7 +160,8 @@ namespace Memenim.Core.Schema
     public class SearchedUserSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -143,37 +170,43 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
-        private string _name = string.Empty;
-        public string name
+
+        private string _nickname = string.Empty;
+        [JsonProperty("name")]
+        public string Nickname
         {
             get
             {
-                return _name;
+                return _nickname;
             }
             set
             {
-                _name = value;
-                OnPropertyChanged(nameof(name));
+                _nickname = value;
+                OnPropertyChanged(nameof(Nickname));
             }
         }
-        private string _think = string.Empty;
-        public string think
+
+        private string _thoughts = string.Empty;
+        [JsonProperty("think")]
+        public string Thoughts
         {
             get
             {
-                return _think;
+                return _thoughts;
             }
             set
             {
-                _think = value;
-                OnPropertyChanged(nameof(think));
+                _thoughts = value;
+                OnPropertyChanged(nameof(Thoughts));
             }
         }
+
         private string _dream = string.Empty;
-        public string dream
+        [JsonProperty("dream")]
+        public string Dream
         {
             get
             {
@@ -182,11 +215,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _dream = value;
-                OnPropertyChanged(nameof(dream));
+                OnPropertyChanged(nameof(Dream));
             }
         }
+
         private string _about = string.Empty;
-        public string about
+        [JsonProperty("about")]
+        public string About
         {
             get
             {
@@ -195,11 +230,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _about = value;
-                OnPropertyChanged(nameof(about));
+                OnPropertyChanged(nameof(About));
             }
         }
+
         private int _age;
-        public int age
+        [JsonProperty("age")]
+        public int Age
         {
             get
             {
@@ -208,24 +245,43 @@ namespace Memenim.Core.Schema
             set
             {
                 _age = value;
-                OnPropertyChanged(nameof(age));
+                OnPropertyChanged(nameof(Age));
             }
         }
-        private int _sex;
-        public int sex
+
+        private int _sexOriginal;
+        [JsonProperty("sex")]
+        private int SexOriginal
         {
             get
             {
-                return _sex;
+                return _sexOriginal;
             }
             set
             {
-                _sex = value;
-                OnPropertyChanged(nameof(sex));
+                _sexOriginal = value;
+                OnPropertyChanged(nameof(Sex));
             }
         }
+        [JsonIgnore]
+        public UserSexType Sex
+        {
+            get
+            {
+                return Enum.IsDefined(typeof(UserSexType), (byte)_sexOriginal)
+                    ? (UserSexType)_sexOriginal
+                    : UserSexType.Unknown;
+            }
+            set
+            {
+                _sexOriginal = (byte)value;
+                OnPropertyChanged(nameof(Sex));
+            }
+        }
+
         private int _country;
-        public int country
+        [JsonProperty("country")]
+        public int Country
         {
             get
             {
@@ -234,11 +290,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _country = value;
-                OnPropertyChanged(nameof(country));
+                OnPropertyChanged(nameof(Country));
             }
         }
+
         private string _city = string.Empty;
-        public string city
+        [JsonProperty("city")]
+        public string City
         {
             get
             {
@@ -247,46 +305,65 @@ namespace Memenim.Core.Schema
             set
             {
                 _city = value;
-                OnPropertyChanged(nameof(city));
+                OnPropertyChanged(nameof(City));
             }
         }
-        private string _photo = string.Empty;
-        public string photo
+
+        private string _photoUrl = string.Empty;
+        [JsonProperty("photo")]
+        public string PhotoUrl
         {
             get
             {
-                return _photo;
+                return _photoUrl;
             }
             set
             {
-                _photo = value;
-                OnPropertyChanged(nameof(photo));
+                _photoUrl = value;
+                OnPropertyChanged(nameof(PhotoUrl));
             }
         }
-        private string _banner = string.Empty;
-        public string banner
+
+        private string _bannerUrl = string.Empty;
+        [JsonProperty("banner")]
+        public string BannerUrl
         {
             get
             {
-                return _banner;
+                return _bannerUrl;
             }
             set
             {
-                _banner = value;
-                OnPropertyChanged(nameof(banner));
+                _bannerUrl = value;
+                OnPropertyChanged(nameof(BannerUrl));
             }
         }
-        private int _online = -1;
-        public int online
+
+        private int _isOnlineOriginal;
+        [JsonProperty("online")]
+        private int IsOnlineOriginal
         {
             get
             {
-                return _online;
+                return _isOnlineOriginal;
             }
             set
             {
-                _online = value;
-                OnPropertyChanged(nameof(online));
+                _isOnlineOriginal = value;
+                OnPropertyChanged(nameof(IsOnline));
+            }
+        }
+        [JsonIgnore]
+        public bool IsOnline
+        {
+            get
+            {
+                return _isOnlineOriginal != 0;
+            }
+            set
+            {
+                _isOnlineOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsOnline));
             }
         }
     }
@@ -294,7 +371,8 @@ namespace Memenim.Core.Schema
     public class ProfileSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -303,11 +381,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
+
         private string _login = string.Empty;
-        public string login
+        [JsonProperty("login")]
+        public string Login
         {
             get
             {
@@ -316,50 +396,73 @@ namespace Memenim.Core.Schema
             set
             {
                 _login = value;
-                OnPropertyChanged(nameof(login));
+                OnPropertyChanged(nameof(Login));
             }
         }
-        private string _name = string.Empty;
-        public string name
+
+        private string _nickname = string.Empty;
+        [JsonProperty("name")]
+        public string Nickname
         {
             get
             {
-                return _name;
+                return _nickname;
             }
             set
             {
-                _name = value;
-                OnPropertyChanged(nameof(name));
+                _nickname = value;
+                OnPropertyChanged(nameof(Nickname));
             }
         }
-        private string _think;
-        public string think
+
+        private string _thoughts;
+        [JsonProperty("think")]
+        public string Thoughts
         {
             get
             {
-                return _think;
+                return _thoughts;
             }
             set
             {
-                _think = value;
-                OnPropertyChanged(nameof(think));
+                _thoughts = value;
+                OnPropertyChanged(nameof(Thoughts));
             }
         }
-        private int _target;
-        public int target
+
+        private int _purposeOriginal;
+        [JsonProperty("target")]
+        private int PurposeOriginal
         {
             get
             {
-                return _target;
+                return _purposeOriginal;
             }
             set
             {
-                _target = value;
-                OnPropertyChanged(nameof(target));
+                _purposeOriginal = value;
+                OnPropertyChanged(nameof(Purpose));
             }
         }
+        [JsonIgnore]
+        public UserPurposeType Purpose
+        {
+            get
+            {
+                return Enum.IsDefined(typeof(UserPurposeType), (byte)_purposeOriginal)
+                    ? (UserPurposeType)_purposeOriginal
+                    : UserPurposeType.Unknown;
+            }
+            set
+            {
+                _purposeOriginal = (byte)value;
+                OnPropertyChanged(nameof(Purpose));
+            }
+        }
+
         private string _dream;
-        public string dream
+        [JsonProperty("dream")]
+        public string Dream
         {
             get
             {
@@ -368,11 +471,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _dream = value;
-                OnPropertyChanged(nameof(dream));
+                OnPropertyChanged(nameof(Dream));
             }
         }
+
         private string _about;
-        public string about
+        [JsonProperty("about")]
+        public string About
         {
             get
             {
@@ -381,24 +486,28 @@ namespace Memenim.Core.Schema
             set
             {
                 _about = value;
-                OnPropertyChanged(nameof(about));
+                OnPropertyChanged(nameof(About));
             }
         }
-        private string _hvalues;
-        public string hvalues
+
+        private string _values;
+        [JsonProperty("hvalues")]
+        public string Values
         {
             get
             {
-                return _hvalues;
+                return _values;
             }
             set
             {
-                _hvalues = value;
-                OnPropertyChanged(nameof(hvalues));
+                _values = value;
+                OnPropertyChanged(nameof(Values));
             }
         }
+
         private string _interests;
-        public string interests
+        [JsonProperty("interests")]
+        public string Interests
         {
             get
             {
@@ -407,76 +516,88 @@ namespace Memenim.Core.Schema
             set
             {
                 _interests = value;
-                OnPropertyChanged(nameof(interests));
+                OnPropertyChanged(nameof(Interests));
             }
         }
-        private string _fmusic;
-        public string fmusic
+
+        private string _favoriteMusic;
+        [JsonProperty("fmusic")]
+        public string FavoriteMusic
         {
             get
             {
-                return _fmusic;
+                return _favoriteMusic;
             }
             set
             {
-                _fmusic = value;
-                OnPropertyChanged(nameof(fmusic));
+                _favoriteMusic = value;
+                OnPropertyChanged(nameof(FavoriteMusic));
             }
         }
-        private string _ffilms;
-        public string ffilms
+
+        private string _favoriteBooks;
+        [JsonProperty("fbooks")]
+        public string FavoriteBooks
         {
             get
             {
-                return _ffilms;
+                return _favoriteBooks;
             }
             set
             {
-                _ffilms = value;
-                OnPropertyChanged(nameof(ffilms));
+                _favoriteBooks = value;
+                OnPropertyChanged(nameof(FavoriteBooks));
             }
         }
-        private string _fbooks;
-        public string fbooks
+
+        private string _favoriteMovies;
+        [JsonProperty("ffilms")]
+        public string FavoriteMovies
         {
             get
             {
-                return _fbooks;
+                return _favoriteMovies;
             }
             set
             {
-                _fbooks = value;
-                OnPropertyChanged(nameof(fbooks));
+                _favoriteMovies = value;
+                OnPropertyChanged(nameof(FavoriteMovies));
             }
         }
-        private string _tempo;
-        public string tempo
+
+        private string _emotionalPortrait;
+        [JsonProperty("tempo")]
+        public string EmotionalPortrait
         {
             get
             {
-                return _tempo;
+                return _emotionalPortrait;
             }
             set
             {
-                _tempo = value;
-                OnPropertyChanged(nameof(tempo));
+                _emotionalPortrait = value;
+                OnPropertyChanged(nameof(EmotionalPortrait));
             }
         }
-        private string _attitude;
-        public string attitude
+
+        private string _attitudeToOthers;
+        [JsonProperty("attitude")]
+        public string AttitudeToOthers
         {
             get
             {
-                return _attitude;
+                return _attitudeToOthers;
             }
             set
             {
-                _attitude = value;
-                OnPropertyChanged(nameof(attitude));
+                _attitudeToOthers = value;
+                OnPropertyChanged(nameof(AttitudeToOthers));
             }
         }
+
         private int _age;
-        public int age
+        [JsonProperty("age")]
+        public int Age
         {
             get
             {
@@ -485,24 +606,43 @@ namespace Memenim.Core.Schema
             set
             {
                 _age = value;
-                OnPropertyChanged(nameof(age));
+                OnPropertyChanged(nameof(Age));
             }
         }
-        private int _sex;
-        public int sex
+
+        private int _sexOriginal;
+        [JsonProperty("sex")]
+        private int SexOriginal
         {
             get
             {
-                return _sex;
+                return _sexOriginal;
             }
             set
             {
-                _sex = value;
-                OnPropertyChanged(nameof(sex));
+                _sexOriginal = value;
+                OnPropertyChanged(nameof(Sex));
             }
         }
+        [JsonIgnore]
+        public UserSexType Sex
+        {
+            get
+            {
+                return Enum.IsDefined(typeof(UserSexType), (byte)_sexOriginal)
+                    ? (UserSexType)_sexOriginal
+                    : UserSexType.Unknown;
+            }
+            set
+            {
+                _sexOriginal = (byte)value;
+                OnPropertyChanged(nameof(Sex));
+            }
+        }
+
         private int _country;
-        public int country
+        [JsonProperty("country")]
+        public int Country
         {
             get
             {
@@ -511,11 +651,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _country = value;
-                OnPropertyChanged(nameof(country));
+                OnPropertyChanged(nameof(Country));
             }
         }
+
         private string _city;
-        public string city
+        [JsonProperty("city")]
+        public string City
         {
             get
             {
@@ -524,46 +666,67 @@ namespace Memenim.Core.Schema
             set
             {
                 _city = value;
-                OnPropertyChanged(nameof(city));
+                OnPropertyChanged(nameof(City));
             }
         }
-        private string _photo = string.Empty;
-        public string photo
+
+        private string _photoUrl = string.Empty;
+        [JsonProperty("photo")]
+        public string PhotoUrl
         {
             get
             {
-                return _photo;
+                return _photoUrl;
             }
             set
             {
-                _photo = value;
-                OnPropertyChanged(nameof(photo));
+                _photoUrl = value;
+                OnPropertyChanged(nameof(PhotoUrl));
             }
         }
-        private string _banner = string.Empty;
-        public string banner
+
+        private string _bannerUrl = string.Empty;
+        [JsonProperty("banner")]
+        public string BannerUrl
         {
             get
             {
-                return _banner;
+                return _bannerUrl;
             }
             set
             {
-                _banner = value;
-                OnPropertyChanged(nameof(banner));
+                _bannerUrl = value;
+                OnPropertyChanged(nameof(BannerUrl));
             }
         }
-        private int _status;
-        public int status
+
+        private int _statusOriginal;
+        [JsonProperty("status")]
+        private int StatusOriginal
         {
             get
             {
-                return _status;
+                return _statusOriginal;
             }
             set
             {
-                _status = value;
-                OnPropertyChanged(nameof(status));
+                _statusOriginal = value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
+        [JsonIgnore]
+        public UserStatusType Status
+        {
+            get
+            {
+                return Enum.IsDefined(typeof(UserStatusType), (byte)_statusOriginal)
+                    ? (UserStatusType)_statusOriginal
+                    : UserStatusType.Active;
+            }
+            set
+            {
+                _statusOriginal = (byte)value;
+                OnPropertyChanged(nameof(Status));
             }
         }
     }
@@ -573,7 +736,8 @@ namespace Memenim.Core.Schema
     public class PostCategorySchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -582,20 +746,22 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
-        private string _text;
-        public string text
+
+        private string _name;
+        [JsonProperty("text")]
+        public string Name
         {
             get
             {
-                return _text;
+                return _name;
             }
             set
             {
-                _text = value;
-                OnPropertyChanged(nameof(text));
+                _name = value;
+                OnPropertyChanged(nameof(Name));
             }
         }
     }
@@ -603,7 +769,8 @@ namespace Memenim.Core.Schema
     public class RectangleSchema : BaseSchema
     {
         private int _width;
-        public int width
+        [JsonProperty("width")]
+        public int Width
         {
             get
             {
@@ -612,11 +779,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _width = value;
-                OnPropertyChanged(nameof(width));
+                OnPropertyChanged(nameof(Width));
             }
         }
+
         private int _height;
-        public int height
+        [JsonProperty("height")]
+        public int Height
         {
             get
             {
@@ -625,97 +794,109 @@ namespace Memenim.Core.Schema
             set
             {
                 _height = value;
-                OnPropertyChanged(nameof(height));
+                OnPropertyChanged(nameof(Height));
             }
         }
     }
 
     public class PhotoSizeSchema : BaseSchema
     {
-        private RectangleSchema _photo_small = new RectangleSchema();
-        public RectangleSchema photo_small
+        private RectangleSchema _small = new RectangleSchema();
+        [JsonProperty("photo_small")]
+        public RectangleSchema Small
         {
             get
             {
-                return _photo_small;
+                return _small;
             }
             set
             {
-                _photo_small = value;
-                OnPropertyChanged(nameof(photo_small));
+                _small = value;
+                OnPropertyChanged(nameof(Small));
             }
         }
-        private RectangleSchema _photo_medium = new RectangleSchema();
-        public RectangleSchema photo_medium
+
+        private RectangleSchema _medium = new RectangleSchema();
+        [JsonProperty("photo_medium")]
+        public RectangleSchema Medium
         {
             get
             {
-                return _photo_medium;
+                return _medium;
             }
             set
             {
-                _photo_medium = value;
-                OnPropertyChanged(nameof(photo_medium));
+                _medium = value;
+                OnPropertyChanged(nameof(Medium));
             }
         }
-        private RectangleSchema _photo_big = new RectangleSchema();
-        public RectangleSchema photo_big
+
+        private RectangleSchema _big = new RectangleSchema();
+        [JsonProperty("photo_big")]
+        public RectangleSchema Big
         {
             get
             {
-                return _photo_big;
+                return _big;
             }
             set
             {
-                _photo_big = value;
-                OnPropertyChanged(nameof(photo_big));
+                _big = value;
+                OnPropertyChanged(nameof(Big));
             }
         }
     }
 
     public class PhotoSchema : BaseSchema
     {
-        private string _photo_small = string.Empty;
-        public string photo_small
+        private string _smallUrl = string.Empty;
+        [JsonProperty("photo_small")]
+        public string SmallUrl
         {
             get
             {
-                return _photo_small;
+                return _smallUrl;
             }
             set
             {
-                _photo_small = value;
-                OnPropertyChanged(nameof(photo_small));
+                _smallUrl = value;
+                OnPropertyChanged(nameof(SmallUrl));
             }
         }
-        private string _photo_medium = string.Empty;
-        public string photo_medium
+
+        private string _mediumUrl = string.Empty;
+        [JsonProperty("photo_medium")]
+        public string MediumUrl
         {
             get
             {
-                return _photo_medium;
+                return _mediumUrl;
             }
             set
             {
-                _photo_medium = value;
-                OnPropertyChanged(nameof(photo_medium));
+                _mediumUrl = value;
+                OnPropertyChanged(nameof(MediumUrl));
             }
         }
-        private string _photo_big = string.Empty;
-        public string photo_big
+
+        private string _bigUrl = string.Empty;
+        [JsonProperty("photo_big")]
+        public string BigUrl
         {
             get
             {
-                return _photo_big;
+                return _bigUrl;
             }
             set
             {
-                _photo_big = value;
-                OnPropertyChanged(nameof(photo_big));
+                _bigUrl = value;
+                OnPropertyChanged(nameof(BigUrl));
             }
         }
+
         private PhotoSizeSchema _size = new PhotoSizeSchema();
-        public PhotoSizeSchema size
+        [JsonProperty("size")]
+        public PhotoSizeSchema Size
         {
             get
             {
@@ -724,58 +905,79 @@ namespace Memenim.Core.Schema
             set
             {
                 _size = value;
-                OnPropertyChanged(nameof(size));
+                OnPropertyChanged(nameof(Size));
             }
         }
     }
 
     public class StatisticSchema : BaseSchema
     {
-        private int _count;
-        public int count
+        private int _totalCount;
+        [JsonProperty("count")]
+        public int TotalCount
         {
             get
             {
-                return _count;
+                return _totalCount;
             }
             set
             {
-                _count = value;
-                OnPropertyChanged(nameof(count));
+                _totalCount = value;
+                OnPropertyChanged(nameof(TotalCount));
             }
         }
-        private int _my;
-        public int my
+
+        private int _myCount;
+        [JsonProperty("my")]
+        public int MyCount
         {
             get
             {
-                return _my;
+                return _myCount;
             }
             set
             {
-                _my = value;
-                OnPropertyChanged(nameof(my));
+                _myCount = value;
+                OnPropertyChanged(nameof(MyCount));
             }
         }
     }
 
     public class AttachmentSchema : BaseSchema
     {
-        private string _link;
-        public string link
+        private string _url;
+        [JsonProperty("link")]
+        public string Url
         {
             get
             {
-                return _link;
+                return _url;
             }
             set
             {
-                _link = value;
-                OnPropertyChanged(nameof(link));
+                _url = value;
+                OnPropertyChanged(nameof(Url));
             }
         }
+
+        private string _type = "photo";
+        [JsonProperty("type")]
+        public string Type
+        {
+            get
+            {
+                return _type;
+            }
+            set
+            {
+                _type = value;
+                OnPropertyChanged(nameof(Type));
+            }
+        }
+
         private PhotoSchema _photo = new PhotoSchema();
-        public PhotoSchema photo
+        [JsonProperty("photo")]
+        public PhotoSchema Photo
         {
             get
             {
@@ -784,20 +986,7 @@ namespace Memenim.Core.Schema
             set
             {
                 _photo = value;
-                OnPropertyChanged(nameof(photo));
-            }
-        }
-        private string _type = "photo";
-        public string type
-        {
-            get
-            {
-                return _type;
-            }
-            set
-            {
-                _type = value;
-                OnPropertyChanged(nameof(type));
+                OnPropertyChanged(nameof(Photo));
             }
         }
     }
@@ -805,7 +994,8 @@ namespace Memenim.Core.Schema
     public class PostEditSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -814,11 +1004,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
+
         private string _text = string.Empty;
-        public string text
+        [JsonProperty("text")]
+        public string Text
         {
             get
             {
@@ -827,80 +1019,159 @@ namespace Memenim.Core.Schema
             set
             {
                 _text = value;
-                OnPropertyChanged(nameof(text));
+                OnPropertyChanged(nameof(Text));
             }
         }
-        private int _adult;
-        public int adult
+
+        private int _categoryId = PostApi.PostCategories?.Values.FirstOrDefault()?.Id ?? 0;
+        [JsonProperty("category")]
+        public int CategoryId
         {
             get
             {
-                return _adult;
+                return _categoryId;
             }
             set
             {
-                _adult = value;
-                OnPropertyChanged(nameof(adult));
+                _categoryId = value;
+                OnPropertyChanged(nameof(CategoryId));
+                OnPropertyChanged(nameof(CategoryName));
             }
         }
-        private int _open_comments = 1;
-        public int open_comments
-        {
-            get
-            {
-                return _open_comments;
-            }
-            set
-            {
-                _open_comments = value;
-                OnPropertyChanged(nameof(open_comments));
-            }
-        }
-        private int _category = PostApi.PostCategories?.Values.FirstOrDefault()?.id ?? 0;
-        public int category
-        {
-            get
-            {
-                return _category;
-            }
-            set
-            {
-                _category = value;
-                OnPropertyChanged(nameof(category));
-                OnPropertyChanged(nameof(category_string));
-            }
-        }
-        //private string _category_string = PostApi.PostCategories?.Values.FirstOrDefault()?.text;
-        public string category_string
+
+        //private string _categoryName = PostApi.PostCategories?.Values.FirstOrDefault()?.Name;
+        [JsonProperty("category_string")]
+        public string CategoryName
         {
             get
             {
                 return PostApi.PostCategories.TryGetValue(
-                    category, out var postCategory)
-                    ? postCategory.text
+                    CategoryId, out var postCategory)
+                    ? postCategory.Name
                     : null;
             }
             set
             {
-                //_category_string = value;
-                OnPropertyChanged(nameof(category_string));
+                //_categoryName = value;
+                OnPropertyChanged(nameof(CategoryName));
             }
         }
-        private int _hidden;
-        public int hidden
+
+        private int _isAnonymousOriginal = 1;
+        [JsonProperty("author_watch")]
+        private string IsAnonymousOriginal
         {
             get
             {
-                return _hidden;
+                return _isAnonymousOriginal.ToString();
             }
             set
             {
-                _hidden = value;
-                OnPropertyChanged(nameof(hidden));
+                _isAnonymousOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsAnonymous));
             }
         }
+        [JsonIgnore]
+        public bool IsAnonymous
+        {
+            get
+            {
+                return (_isAnonymousOriginal - 1) == 0;
+            }
+            set
+            {
+                _isAnonymousOriginal = Convert.ToInt32(!value) + 1;
+                OnPropertyChanged(nameof(IsAnonymous));
+            }
+        }
+
+        private int _isCommentsOpenOriginal = 1;
+        [JsonProperty("open_comments")]
+        private int IsCommentsOpenOriginal
+        {
+            get
+            {
+                return _isCommentsOpenOriginal;
+            }
+            set
+            {
+                _isCommentsOpenOriginal = value;
+                OnPropertyChanged(nameof(IsCommentsOpen));
+            }
+        }
+        [JsonIgnore]
+        public bool IsCommentsOpen
+        {
+            get
+            {
+                return _isCommentsOpenOriginal != 0;
+            }
+            set
+            {
+                _isCommentsOpenOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsCommentsOpen));
+            }
+        }
+
+        private int _isHiddenOriginal;
+        [JsonProperty("hidden")]
+        private int IsHiddenOriginal
+        {
+            get
+            {
+                return _isHiddenOriginal;
+            }
+            set
+            {
+                _isHiddenOriginal = value;
+                OnPropertyChanged(nameof(IsHidden));
+            }
+        }
+        [JsonIgnore]
+        public bool IsHidden
+        {
+            get
+            {
+                return _isHiddenOriginal != 0;
+            }
+            set
+            {
+                _isHiddenOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsHidden));
+            }
+        }
+
+        private int _isAdultOriginal;
+        [JsonProperty("adult")]
+        private int IsAdultOriginal
+        {
+            get
+            {
+                return _isAdultOriginal;
+            }
+            set
+            {
+                _isAdultOriginal = value;
+                OnPropertyChanged(nameof(IsAdult));
+            }
+        }
+        [JsonIgnore]
+        public bool IsAdult
+        {
+            get
+            {
+                return _isAdultOriginal != 0;
+            }
+            set
+            {
+                _isAdultOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsAdult));
+            }
+        }
+
         private int _filter;
-        public int filter
+        [JsonProperty("filter")]
+        public int Filter
         {
             get
             {
@@ -909,11 +1180,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _filter = value;
-                OnPropertyChanged(nameof(filter));
+                OnPropertyChanged(nameof(Filter));
             }
         }
+
         private int _type = 1;
-        public int type
+        [JsonProperty("type")]
+        public int Type
         {
             get
             {
@@ -922,37 +1195,16 @@ namespace Memenim.Core.Schema
             set
             {
                 _type = value;
-                OnPropertyChanged(nameof(type));
-            }
-        }
-        private int _author_watch = 1;
-        public string author_watch
-        {
-            get
-            {
-                return _author_watch.ToString();
-            }
-            set
-            {
-                _author_watch = Convert.ToInt32(value);
-                OnPropertyChanged(nameof(author_watch));
+                OnPropertyChanged(nameof(Type));
             }
         }
     }
 
     public class PostSchema : BaseSchema
     {
-        public PostSchema()
-        {
-            attachments.CollectionChanged += (sender, args) =>
-            {
-                if (attachments.Count > 1 && args.Action == NotifyCollectionChangedAction.Add)
-                    attachments.RemoveAt(0);
-            };
-        }
-
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -961,11 +1213,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
+
         private string _text = string.Empty;
-        public string text
+        [JsonProperty("text")]
+        public string Text
         {
             get
             {
@@ -974,132 +1228,219 @@ namespace Memenim.Core.Schema
             set
             {
                 _text = value;
-                OnPropertyChanged(nameof(text));
+                OnPropertyChanged(nameof(Text));
             }
         }
-        private int? _owner_id;
-        public int? owner_id
+
+        private int? _ownerId;
+        [JsonProperty("owner_id")]
+        public int? OwnerId
         {
             get
             {
-                return _owner_id;
+                return _ownerId;
             }
             set
             {
-                _owner_id = value;
-                OnPropertyChanged(nameof(owner_id));
+                _ownerId = value;
+                OnPropertyChanged(nameof(OwnerId));
             }
         }
-        private string _owner_name = string.Empty;
-        public string owner_name
+
+        private string _ownerNickname = string.Empty;
+        [JsonProperty("owner_name")]
+        public string OwnerNickname
         {
             get
             {
-                return _owner_name;
+                return _ownerNickname;
             }
             set
             {
-                _owner_name = value;
-                OnPropertyChanged(nameof(owner_name));
+                _ownerNickname = value;
+                OnPropertyChanged(nameof(OwnerNickname));
             }
         }
-        private string _owner_photo = string.Empty;
-        public string owner_photo
+
+        private string _ownerPhotoUrl = string.Empty;
+        [JsonProperty("owner_photo")]
+        public string OwnerPhotoUrl
         {
             get
             {
-                return _owner_photo;
+                return _ownerPhotoUrl;
             }
             set
             {
-                _owner_photo = value;
-                OnPropertyChanged(nameof(owner_photo));
+                _ownerPhotoUrl = value;
+                OnPropertyChanged(nameof(OwnerPhotoUrl));
             }
         }
-        private int _adult;
-        public int adult
+
+        private int _categoryId = PostApi.PostCategories?.Values.FirstOrDefault()?.Id ?? 0;
+        [JsonProperty("category")]
+        public int CategoryId
         {
             get
             {
-                return _adult;
+                return _categoryId;
             }
             set
             {
-                _adult = value;
-                OnPropertyChanged(nameof(adult));
+                _categoryId = value;
+                OnPropertyChanged(nameof(CategoryId));
+                OnPropertyChanged(nameof(CategoryName));
             }
         }
-        private int _open_comments = 1;
-        public int open_comments
-        {
-            get
-            {
-                return _open_comments;
-            }
-            set
-            {
-                _open_comments = value;
-                OnPropertyChanged(nameof(open_comments));
-            }
-        }
-        private int _category = PostApi.PostCategories?.Values.FirstOrDefault()?.id ?? 0;
-        public int category
-        {
-            get
-            {
-                return _category;
-            }
-            set
-            {
-                _category = value;
-                OnPropertyChanged(nameof(category));
-                OnPropertyChanged(nameof(category_string));
-            }
-        }
-        //private string _category_string = PostApi.PostCategories?.Values.FirstOrDefault()?.text;
-        public string category_string
+
+        //private string _categoryName = PostApi.PostCategories?.Values.FirstOrDefault()?.Name;
+        [JsonProperty("category_string")]
+        public string CategoryName
         {
             get
             {
                 return PostApi.PostCategories.TryGetValue(
-                    category, out var postCategory)
-                    ? postCategory.text
+                    CategoryId, out var postCategory)
+                    ? postCategory.Name
                     : null;
             }
             set
             {
-                //_category_string = value;
-                OnPropertyChanged(nameof(category_string));
+                //_categoryName = value;
+                OnPropertyChanged(nameof(CategoryName));
             }
         }
-        private string _category_title;
-        public string category_title
+
+        private string _categoryTitle;
+        [JsonProperty("category_title")]
+        public string CategoryTitle
         {
             get
             {
-                return _category_title;
+                return _categoryTitle;
             }
             set
             {
-                _category_title = value;
-                OnPropertyChanged(nameof(category_title));
+                _categoryTitle = value;
+                OnPropertyChanged(nameof(CategoryTitle));
             }
         }
-        private int _hidden;
-        public int hidden
+
+        private int _isAnonymousOriginal = 1;
+        [JsonProperty("author_watch")]
+        private int IsAnonymousOriginal
         {
             get
             {
-                return _hidden;
+                return _isAnonymousOriginal;
             }
             set
             {
-                _hidden = value;
-                OnPropertyChanged(nameof(hidden));
+                _isAnonymousOriginal = value;
+                OnPropertyChanged(nameof(IsAnonymous));
             }
         }
+        [JsonIgnore]
+        public bool IsAnonymous
+        {
+            get
+            {
+                return (_isAnonymousOriginal - 1) == 0;
+            }
+            set
+            {
+                _isAnonymousOriginal = Convert.ToInt32(!value) + 1;
+                OnPropertyChanged(nameof(IsAnonymous));
+            }
+        }
+
+        private int _isCommentsOpenOriginal = 1;
+        [JsonProperty("open_comments")]
+        private int IsCommentsOpenOriginal
+        {
+            get
+            {
+                return _isCommentsOpenOriginal;
+            }
+            set
+            {
+                _isCommentsOpenOriginal = value;
+                OnPropertyChanged(nameof(IsCommentsOpen));
+            }
+        }
+        [JsonIgnore]
+        public bool IsCommentsOpen
+        {
+            get
+            {
+                return _isCommentsOpenOriginal != 0;
+            }
+            set
+            {
+                _isCommentsOpenOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsCommentsOpen));
+            }
+        }
+
+        private int _isHiddenOriginal;
+        [JsonProperty("hidden")]
+        private int IsHiddenOriginal
+        {
+            get
+            {
+                return _isHiddenOriginal;
+            }
+            set
+            {
+                _isHiddenOriginal = value;
+                OnPropertyChanged(nameof(IsHidden));
+            }
+        }
+        [JsonIgnore]
+        public bool IsHidden
+        {
+            get
+            {
+                return _isHiddenOriginal != 0;
+            }
+            set
+            {
+                _isHiddenOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsHidden));
+            }
+        }
+
+        private int _isAdultOriginal;
+        [JsonProperty("adult")]
+        private int IsAdultOriginal
+        {
+            get
+            {
+                return _isAdultOriginal;
+            }
+            set
+            {
+                _isAdultOriginal = value;
+                OnPropertyChanged(nameof(IsAdult));
+            }
+        }
+        [JsonIgnore]
+        public bool IsAdult
+        {
+            get
+            {
+                return _isAdultOriginal != 0;
+            }
+            set
+            {
+                _isAdultOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsAdult));
+            }
+        }
+
         private int _filter;
-        public int filter
+        [JsonProperty("filter")]
+        public int Filter
         {
             get
             {
@@ -1108,11 +1449,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _filter = value;
-                OnPropertyChanged(nameof(filter));
+                OnPropertyChanged(nameof(Filter));
             }
         }
+
         private int _type = 1;
-        public int type
+        [JsonProperty("type")]
+        public int Type
         {
             get
             {
@@ -1121,76 +1464,88 @@ namespace Memenim.Core.Schema
             set
             {
                 _type = value;
-                OnPropertyChanged(nameof(type));
+                OnPropertyChanged(nameof(Type));
             }
         }
-        private long _date;
-        public long date
+
+        private long _utcDate;
+        [JsonProperty("date")]
+        public long UtcDate
         {
             get
             {
-                return _date;
+                return _utcDate;
             }
             set
             {
-                _date = value;
-                OnPropertyChanged(nameof(date));
+                _utcDate = value;
+                OnPropertyChanged(nameof(UtcDate));
             }
         }
-        private int _author_watch = 1;
-        public int author_watch
+
+        private int _statusOriginal;
+        [JsonProperty("status")]
+        private int StatusOriginal
         {
             get
             {
-                return _author_watch;
+                return _statusOriginal;
             }
             set
             {
-                _author_watch = value;
-                OnPropertyChanged(nameof(author_watch));
+                _statusOriginal = value;
+                OnPropertyChanged(nameof(Status));
             }
         }
-        private int _status;
-        public int status
+        [JsonIgnore]
+        public PostStatusType Status
         {
             get
             {
-                return _status;
+                return Enum.IsDefined(typeof(PostStatusType), (byte)_statusOriginal)
+                    ? (PostStatusType)_statusOriginal
+                    : PostStatusType.Published;
             }
             set
             {
-                _status = value;
-                OnPropertyChanged(nameof(status));
+                _statusOriginal = (byte)value;
+                OnPropertyChanged(nameof(Status));
             }
         }
-        private int _reposts;
-        public int reposts
+
+        private int _shares;
+        [JsonProperty("reposts")]
+        public int Shares
         {
             get
             {
-                return _reposts;
+                return _shares;
             }
             set
             {
-                _reposts = value;
-                OnPropertyChanged(nameof(reposts));
+                _shares = value;
+                OnPropertyChanged(nameof(Shares));
             }
         }
-        private StatisticSchema _postviews = new StatisticSchema();
-        public StatisticSchema postviews
+
+        private StatisticSchema _views = new StatisticSchema();
+        [JsonProperty("postviews")]
+        public StatisticSchema Views
         {
             get
             {
-                return _postviews;
+                return _views;
             }
             set
             {
-                _postviews = value;
-                OnPropertyChanged(nameof(postviews));
+                _views = value;
+                OnPropertyChanged(nameof(Views));
             }
         }
+
         private StatisticSchema _likes = new StatisticSchema();
-        public StatisticSchema likes
+        [JsonProperty("likes")]
+        public StatisticSchema Likes
         {
             get
             {
@@ -1199,11 +1554,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _likes = value;
-                OnPropertyChanged(nameof(likes));
+                OnPropertyChanged(nameof(Likes));
             }
         }
+
         private StatisticSchema _dislikes = new StatisticSchema();
-        public StatisticSchema dislikes
+        [JsonProperty("dislikes")]
+        public StatisticSchema Dislikes
         {
             get
             {
@@ -1212,11 +1569,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _dislikes = value;
-                OnPropertyChanged(nameof(dislikes));
+                OnPropertyChanged(nameof(Dislikes));
             }
         }
+
         private StatisticSchema _comments = new StatisticSchema();
-        public StatisticSchema comments
+        [JsonProperty("comments")]
+        public StatisticSchema Comments
         {
             get
             {
@@ -1225,11 +1584,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _comments = value;
-                OnPropertyChanged(nameof(comments));
+                OnPropertyChanged(nameof(Comments));
             }
         }
+
         private List<string> _tags = new List<string>();
-        public List<string> tags
+        [JsonProperty("tags")]
+        public List<string> Tags
         {
             get
             {
@@ -1238,15 +1599,17 @@ namespace Memenim.Core.Schema
             set
             {
                 _tags = value;
-                OnPropertyChanged(nameof(tags));
+                OnPropertyChanged(nameof(Tags));
             }
         }
+
         private ObservableCollection<AttachmentSchema> _attachments =
             new ObservableCollection<AttachmentSchema>
             {
                 new AttachmentSchema()
             };
-        public ObservableCollection<AttachmentSchema> attachments
+        [JsonProperty("attachments")]
+        public ObservableCollection<AttachmentSchema> Attachments
         {
             get
             {
@@ -1254,8 +1617,32 @@ namespace Memenim.Core.Schema
             }
             set
             {
+                if (_attachments != null)
+                    _attachments.CollectionChanged -= OnAttachmentsChanged;
+
                 _attachments = value;
-                OnPropertyChanged(nameof(attachments));
+                OnPropertyChanged(nameof(Attachments));
+
+
+                if (_attachments != null)
+                    _attachments.CollectionChanged += OnAttachmentsChanged;
+            }
+        }
+
+
+
+        public PostSchema()
+        {
+            if (Attachments != null)
+                Attachments.CollectionChanged += OnAttachmentsChanged;
+        }
+
+        private void OnAttachmentsChanged(object sender, NotifyCollectionChangedEventArgs args)
+        {
+            if (Attachments.Count > 1
+                && args.Action == NotifyCollectionChangedAction.Add)
+            {
+                Attachments.RemoveAt(0);
             }
         }
     }
@@ -1265,7 +1652,8 @@ namespace Memenim.Core.Schema
     public class CountSchema : BaseSchema
     {
         private int _count;
-        public int count
+        [JsonProperty("count")]
+        public int Count
         {
             get
             {
@@ -1274,7 +1662,7 @@ namespace Memenim.Core.Schema
             set
             {
                 _count = value;
-                OnPropertyChanged(nameof(count));
+                OnPropertyChanged(nameof(Count));
             }
         }
     }
@@ -1282,7 +1670,8 @@ namespace Memenim.Core.Schema
     public class CommentUserSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -1291,33 +1680,37 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
-        private string _name = string.Empty;
-        public string name
+
+        private string _nickname = string.Empty;
+        [JsonProperty("name")]
+        public string Nickname
         {
             get
             {
-                return _name;
+                return _nickname;
             }
             set
             {
-                _name = value;
-                OnPropertyChanged(nameof(name));
+                _nickname = value;
+                OnPropertyChanged(nameof(Nickname));
             }
         }
-        private string _photo = string.Empty;
-        public string photo
+
+        private string _photoUrl = string.Empty;
+        [JsonProperty("photo")]
+        public string PhotoUrl
         {
             get
             {
-                return _photo;
+                return _photoUrl;
             }
             set
             {
-                _photo = value;
-                OnPropertyChanged(nameof(photo));
+                _photoUrl = value;
+                OnPropertyChanged(nameof(PhotoUrl));
             }
         }
     }
@@ -1325,7 +1718,8 @@ namespace Memenim.Core.Schema
     public class CommentSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -1334,11 +1728,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
+
         private string _text = string.Empty;
-        public string text
+        [JsonProperty("text")]
+        public string Text
         {
             get
             {
@@ -1347,37 +1743,56 @@ namespace Memenim.Core.Schema
             set
             {
                 _text = value;
-                OnPropertyChanged(nameof(text));
+                OnPropertyChanged(nameof(Text));
             }
         }
-        private int _anonim;
-        public int anonim
+
+        private int _isAnonymousOriginal;
+        [JsonProperty("anonim")]
+        private int IsAnonymousOriginal
         {
             get
             {
-                return _anonim;
+                return _isAnonymousOriginal;
             }
             set
             {
-                _anonim = value;
-                OnPropertyChanged(nameof(anonim));
+                _isAnonymousOriginal = value;
+                OnPropertyChanged(nameof(IsAnonymous));
             }
         }
-        private long _date;
-        public long date
+        [JsonIgnore]
+        public bool IsAnonymous
         {
             get
             {
-                return _date;
+                return _isAnonymousOriginal != 0;
             }
             set
             {
-                _date = value;
-                OnPropertyChanged(nameof(date));
+                _isAnonymousOriginal = Convert.ToInt32(value);
+                OnPropertyChanged(nameof(IsAnonymous));
             }
         }
+
+        private long _utcDate;
+        [JsonProperty("date")]
+        public long UtcDate
+        {
+            get
+            {
+                return _utcDate;
+            }
+            set
+            {
+                _utcDate = value;
+                OnPropertyChanged(nameof(UtcDate));
+            }
+        }
+
         private CommentUserSchema _user = new CommentUserSchema();
-        public CommentUserSchema user
+        [JsonProperty("user")]
+        public CommentUserSchema User
         {
             get
             {
@@ -1386,11 +1801,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _user = value;
-                OnPropertyChanged(nameof(user));
+                OnPropertyChanged(nameof(User));
             }
         }
+
         private StatisticSchema _likes = new StatisticSchema();
-        public StatisticSchema likes
+        [JsonProperty("likes")]
+        public StatisticSchema Likes
         {
             get
             {
@@ -1399,11 +1816,13 @@ namespace Memenim.Core.Schema
             set
             {
                 _likes = value;
-                OnPropertyChanged(nameof(likes));
+                OnPropertyChanged(nameof(Likes));
             }
         }
+
         private StatisticSchema _dislikes = new StatisticSchema();
-        public StatisticSchema dislikes
+        [JsonProperty("dislikes")]
+        public StatisticSchema Dislikes
         {
             get
             {
@@ -1412,7 +1831,7 @@ namespace Memenim.Core.Schema
             set
             {
                 _dislikes = value;
-                OnPropertyChanged(nameof(dislikes));
+                OnPropertyChanged(nameof(Dislikes));
             }
         }
     }
@@ -1422,7 +1841,8 @@ namespace Memenim.Core.Schema
     public class LibraryPhotoSchema : BaseSchema
     {
         private int _id = -1;
-        public int id
+        [JsonProperty("id")]
+        public int Id
         {
             get
             {
@@ -1431,49 +1851,55 @@ namespace Memenim.Core.Schema
             set
             {
                 _id = value;
-                OnPropertyChanged(nameof(id));
+                OnPropertyChanged(nameof(Id));
             }
         }
-        private string _photo_small = string.Empty;
-        public string photo_small
+
+        private string _smallUrl = string.Empty;
+        [JsonProperty("photo_small")]
+        public string SmallUrl
         {
             get
             {
-                return _photo_small;
+                return _smallUrl;
             }
             set
             {
-                _photo_small = value;
-                OnPropertyChanged(nameof(photo_small));
+                _smallUrl = value;
+                OnPropertyChanged(nameof(SmallUrl));
             }
         }
-        private string _photo_medium = string.Empty;
-        public string photo_medium
+
+        private string _mediumUrl = string.Empty;
+        [JsonProperty("photo_medium")]
+        public string MediumUrl
         {
             get
             {
-                return _photo_medium;
+                return _mediumUrl;
             }
             set
             {
-                _photo_medium = value;
-                OnPropertyChanged(nameof(photo_medium));
+                _mediumUrl = value;
+                OnPropertyChanged(nameof(MediumUrl));
             }
         }
-        private string _photo_big = string.Empty;
-        public string photo_big
+
+        private string _bigUrl = string.Empty;
+        [JsonProperty("photo_big")]
+        public string BigUrl
         {
             get
             {
-                return _photo_big;
+                return _bigUrl;
             }
             set
             {
-                _photo_big = value;
-                OnPropertyChanged(nameof(photo_big));
+                _bigUrl = value;
+                OnPropertyChanged(nameof(BigUrl));
             }
         }
     }
 }
-#pragma warning restore IDE1006 // Стили именования
-// ReSharper restore InconsistentNaming
+#pragma warning restore IDE0051 // Remove unused private member
+#pragma warning restore RCS1213 // Remove unused member declaration.
