@@ -1076,10 +1076,14 @@ namespace Memenim.Core.Schema
         {
             get
             {
+                // 2 - 1 = 1 == 0 = false
+                // 1 - 1 = 0 == 0 = true
                 return (_isAnonymousOriginal - 1) == 0;
             }
             set
             {
+                // !false = true = 1 + 1 = 2
+                // !true = false = 0 + 1 = 1
                 _isAnonymousOriginal = Convert.ToInt32(!value) + 1;
                 OnPropertyChanged(nameof(IsAnonymous));
             }
@@ -1104,16 +1108,20 @@ namespace Memenim.Core.Schema
         {
             get
             {
-                return _isCommentsOpenOriginal != 0;
+                // 2 - 1 = 1 == 0 = false
+                // 1 - 1 = 0 == 0 = true
+                return (_isCommentsOpenOriginal - 1) == 0;
             }
             set
             {
-                _isCommentsOpenOriginal = Convert.ToInt32(value);
+                // !false = true = 1 + 1 = 2
+                // !true = false = 0 + 1 = 1
+                _isCommentsOpenOriginal = Convert.ToInt32(!value) + 1;
                 OnPropertyChanged(nameof(IsCommentsOpen));
             }
         }
 
-        private int _isHiddenOriginal;
+        private int _isHiddenOriginal = 1;
         [JsonProperty("hidden")]
         private int IsHiddenOriginal
         {
@@ -1132,11 +1140,15 @@ namespace Memenim.Core.Schema
         {
             get
             {
-                return _isHiddenOriginal != 0;
+                // 2 - 1 = 1 != 0 = true
+                // 1 - 1 = 0 != 0 = false
+                return (_isHiddenOriginal - 1) != 0;
             }
             set
             {
-                _isHiddenOriginal = Convert.ToInt32(value);
+                // false = 0 + 1 = 1
+                // true = 1 + 1 = 2
+                _isHiddenOriginal = Convert.ToInt32(value) + 1;
                 OnPropertyChanged(nameof(IsHidden));
             }
         }
@@ -1345,10 +1357,14 @@ namespace Memenim.Core.Schema
         {
             get
             {
+                // 2 - 1 = 1 == 0 = false
+                // 1 - 1 = 0 == 0 = true
                 return (_isAnonymousOriginal - 1) == 0;
             }
             set
             {
+                // !false = true = 1 + 1 = 2
+                // !true = false = 0 + 1 = 1
                 _isAnonymousOriginal = Convert.ToInt32(!value) + 1;
                 OnPropertyChanged(nameof(IsAnonymous));
             }
@@ -1373,16 +1389,20 @@ namespace Memenim.Core.Schema
         {
             get
             {
-                return _isCommentsOpenOriginal != 0;
+                // 2 - 1 = 1 == 0 = false
+                // 1 - 1 = 0 == 0 = true
+                return (_isCommentsOpenOriginal - 1) == 0;
             }
             set
             {
-                _isCommentsOpenOriginal = Convert.ToInt32(value);
+                // !false = true = 1 + 1 = 2
+                // !true = false = 0 + 1 = 1
+                _isCommentsOpenOriginal = Convert.ToInt32(!value) + 1;
                 OnPropertyChanged(nameof(IsCommentsOpen));
             }
         }
 
-        private int _isHiddenOriginal;
+        private int _isHiddenOriginal = 1;
         [JsonProperty("hidden")]
         private int IsHiddenOriginal
         {
@@ -1401,11 +1421,15 @@ namespace Memenim.Core.Schema
         {
             get
             {
-                return _isHiddenOriginal != 0;
+                // 2 - 1 = 1 != 0 = true
+                // 1 - 1 = 0 != 0 = false
+                return (_isHiddenOriginal - 1) != 0;
             }
             set
             {
-                _isHiddenOriginal = Convert.ToInt32(value);
+                // false = 0 + 1 = 1
+                // true = 1 + 1 = 2
+                _isHiddenOriginal = Convert.ToInt32(value) + 1;
                 OnPropertyChanged(nameof(IsHidden));
             }
         }
