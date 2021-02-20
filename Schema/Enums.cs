@@ -14,7 +14,8 @@ namespace Memenim.Core.Schema
     {
         Premoderating = 0,
         Published = 1,
-        Rejected = 2
+        Unlisted = 2,
+        Rejected = 10
     }
 
     public enum UserStatusType : byte

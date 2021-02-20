@@ -1669,9 +1669,9 @@ namespace Memenim.Core.Schema
 
     public class CommentUserSchema : BaseSchema
     {
-        private int _id = -1;
+        private int? _id = -1;
         [JsonProperty("id")]
-        public int Id
+        public int? Id
         {
             get
             {
