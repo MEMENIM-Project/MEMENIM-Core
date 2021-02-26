@@ -945,33 +945,46 @@ namespace Memenim.Core.Schema
 
     public class AttachmentSchema : BaseSchema
     {
-        private string _url;
-        [JsonProperty("link")]
-        public string Url
+        private string _typeOriginal = "photo";
+        [JsonProperty("type")]
+        public string TypeOriginal
         {
             get
             {
-                return _url;
+                return _typeOriginal;
             }
             set
             {
-                _url = value;
-                OnPropertyChanged(nameof(Url));
+                _typeOriginal = value;
+                OnPropertyChanged(nameof(Type));
+            }
+        }
+        [JsonIgnore]
+        public AttachmentType Type
+        {
+            get
+            {
+                return AttachmentType.Parse(_typeOriginal);
+            }
+            set
+            {
+                _typeOriginal = value.ToString();
+                OnPropertyChanged(nameof(Type));
             }
         }
 
-        private string _type = "photo";
-        [JsonProperty("type")]
-        public string Type
+        private string _link;
+        [JsonProperty("link")]
+        public string Link
         {
             get
             {
-                return _type;
+                return _link;
             }
             set
             {
-                _type = value;
-                OnPropertyChanged(nameof(Type));
+                _link = value;
+                OnPropertyChanged(nameof(Link));
             }
         }
 
@@ -1181,9 +1194,9 @@ namespace Memenim.Core.Schema
             }
         }
 
-        private int _filter;
+        private int? _filter = 0;
         [JsonProperty("filter")]
-        public int Filter
+        public int? Filter
         {
             get
             {
@@ -1462,9 +1475,9 @@ namespace Memenim.Core.Schema
             }
         }
 
-        private int _filter;
+        private int? _filter = 0;
         [JsonProperty("filter")]
-        public int Filter
+        public int? Filter
         {
             get
             {
