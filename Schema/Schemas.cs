@@ -128,6 +128,66 @@ namespace Memenim.Core.Schema
             }
         }
 
+        private string _photoUrl = string.Empty;
+        [JsonProperty("photo")]
+        public string PhotoUrl
+        {
+            get
+            {
+                return _photoUrl;
+            }
+            set
+            {
+                _photoUrl = value;
+                OnPropertyChanged(nameof(PhotoUrl));
+            }
+        }
+
+        private string _bannerUrl = string.Empty;
+        [JsonProperty("banner")]
+        public string BannerUrl
+        {
+            get
+            {
+                return _bannerUrl;
+            }
+            set
+            {
+                _bannerUrl = value;
+                OnPropertyChanged(nameof(BannerUrl));
+            }
+        }
+
+        private int _statusOriginal;
+        [JsonProperty("status")]
+        private int StatusOriginal
+        {
+            get
+            {
+                return _statusOriginal;
+            }
+            set
+            {
+                _statusOriginal = value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
+        [JsonIgnore]
+        public UserStatusType Status
+        {
+            get
+            {
+                return Enum.IsDefined(typeof(UserStatusType), (byte)_statusOriginal)
+                    ? (UserStatusType)_statusOriginal
+                    : UserStatusType.Active;
+            }
+            set
+            {
+                _statusOriginal = (byte)value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
+
         private int _isOnlineOriginal;
         [JsonProperty("online")]
         private int IsOnlineOriginal
@@ -153,6 +213,21 @@ namespace Memenim.Core.Schema
             {
                 _isOnlineOriginal = Convert.ToInt32(value);
                 OnPropertyChanged(nameof(IsOnline));
+            }
+        }
+
+        private string _rocketId = string.Empty;
+        [JsonProperty("rocket_id")]
+        public string RocketId
+        {
+            get
+            {
+                return _rocketId;
+            }
+            set
+            {
+                _rocketId = value;
+                OnPropertyChanged(nameof(RocketId));
             }
         }
     }
