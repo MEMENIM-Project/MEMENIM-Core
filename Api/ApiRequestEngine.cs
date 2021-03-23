@@ -120,13 +120,26 @@ namespace Memenim.Core.Api
 
 
 
+        private static void PrepareRequest(HttpRequestMessage httpRequest,
+            ApiEndPoint endPoint, string token = null, string userId = null)
+        {
+            if (endPoint == ApiEndPoint.Chat)
+            {
+                PrepareRequestRocket(
+                    httpRequest, token, userId);
+
+                return;
+            }
+
+            PrepareRequestAnonym(
+                httpRequest, token);
+        }
         private static void PrepareRequestAnonym(HttpRequestMessage httpRequest,
             string token)
         {
             if (!string.IsNullOrEmpty(token))
                 httpRequest.Headers.Authorization = new AuthenticationHeaderValue(token);
         }
-
         private static void PrepareRequestRocket(HttpRequestMessage httpRequest,
             string token, string userId)
         {
@@ -170,12 +183,8 @@ namespace Memenim.Core.Api
             string request, object data = null, string token = null,
             RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
-            var httpRequest = new HttpRequestMessage();
-
-            PrepareRequestAnonym(httpRequest, token);
-
             return ExecuteRequestJsonInternal<T>(
-                httpRequest, request, data, type, endPoint);
+                request, data, token, null, type, endPoint);
         }
 
 
@@ -198,21 +207,17 @@ namespace Memenim.Core.Api
             string request, object data = null, string token = null, string userId = null,
             RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
-            var httpRequest = new HttpRequestMessage();
-
-            PrepareRequestRocket(httpRequest, token, userId);
-
             return ExecuteRequestJsonInternal<T>(
-                httpRequest, request, data, type, endPoint);
+                request, data, token, userId, type, endPoint);
         }
 
 
         private static async Task<ApiResponse> ExecuteRequestJsonInternal(
-            HttpRequestMessage httpRequest, string request, object data = null,
+            string request, object data = null, string token = null, string userId = null,
             RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
             var response = await ExecuteRequestJsonInternal<object>(
-                    httpRequest, request, data, type, endPoint)
+                    request, data, token, userId, type, endPoint)
                 .ConfigureAwait(false);
 
             return new ApiResponse
@@ -223,19 +228,25 @@ namespace Memenim.Core.Api
             };
         }
         private static async Task<ApiResponse<T>> ExecuteRequestJsonInternal<T>(
-            HttpRequestMessage httpRequest, string request, object data = null,
+            string request, object data = null, string token = null, string userId = null,
             RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
+            HttpRequestMessage httpRequest;
             HttpResponseMessage httpResponse;
 
             while (true)
             {
                 try
                 {
-                    httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    httpRequest = new HttpRequestMessage();
 
                     if (endPoint == null)
                         endPoint = ApiEndPoint.GeneralPublic;
+
+                    PrepareRequest(
+                        httpRequest, endPoint, token, userId);
+
+                    httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                     httpRequest.RequestUri = new Uri(endPoint.Url + request);
                     string jsonData = string.Empty;
