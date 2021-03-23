@@ -118,10 +118,45 @@ namespace Memenim.Core.Api
             ConnectionStateChanged?.Invoke(sender, e);
         }
 
-        internal static async Task<ApiResponse> ExecuteRequestJson(string request, object data = null,
-            string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
+
+
+        private static void PrepareRequestAnonym(HttpRequestMessage httpRequest,
+            string token)
         {
-            var response = await ExecuteRequestJson<object>(request, data, token, type, endPoint)
+            if (!string.IsNullOrEmpty(token))
+                httpRequest.Headers.Authorization = new AuthenticationHeaderValue(token);
+        }
+
+        private static void PrepareRequestRocket(HttpRequestMessage httpRequest,
+            string token, string userId)
+        {
+            if (!string.IsNullOrEmpty(token))
+                httpRequest.Headers.Add("X-Auth-Token", token);
+
+            if (!string.IsNullOrEmpty(userId))
+                httpRequest.Headers.Add("X-User-Id", userId);
+        }
+
+        private static ApiResponse<T> GetApiResponse<T>(HttpResponseMessage httpResponse,
+            string response, ApiEndPoint endPoint)
+        {
+            if (endPoint == ApiEndPoint.Chat)
+            {
+                return JsonConvert.DeserializeObject<RocketApiResponse<T>>(response)?
+                    .GetApiResponse(httpResponse);
+            }
+
+            return JsonConvert.DeserializeObject<ApiResponse<T>>(response);
+        }
+
+
+
+        internal static async Task<ApiResponse> ExecuteAnonymRequestJson(
+            string request, object data = null, string token = null,
+            RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
+        {
+            var response = await ExecuteAnonymRequestJson<object>(
+                    request, data, token, type, endPoint)
                 .ConfigureAwait(false);
 
             return new ApiResponse
@@ -131,20 +166,73 @@ namespace Memenim.Core.Api
                 Message = response.Message
             };
         }
-        internal static async Task<ApiResponse<T>> ExecuteRequestJson<T>(string request, object data = null,
-            string token = null, RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
+        internal static Task<ApiResponse<T>> ExecuteAnonymRequestJson<T>(
+            string request, object data = null, string token = null,
+            RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
         {
+            var httpRequest = new HttpRequestMessage();
+
+            PrepareRequestAnonym(httpRequest, token);
+
+            return ExecuteRequestJsonInternal<T>(
+                httpRequest, request, data, type, endPoint);
+        }
+
+
+        internal static async Task<ApiResponse> ExecuteRocketRequestJson(
+            string request, object data = null, string token = null, string userId = null,
+            RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
+        {
+            var response = await ExecuteRocketRequestJson<object>(
+                    request, data, token, userId, type, endPoint)
+                .ConfigureAwait(false);
+
+            return new ApiResponse
+            {
+                Code = response.Code,
+                IsError = response.IsError,
+                Message = response.Message
+            };
+        }
+        internal static Task<ApiResponse<T>> ExecuteRocketRequestJson<T>(
+            string request, object data = null, string token = null, string userId = null,
+            RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
+        {
+            var httpRequest = new HttpRequestMessage();
+
+            PrepareRequestRocket(httpRequest, token, userId);
+
+            return ExecuteRequestJsonInternal<T>(
+                httpRequest, request, data, type, endPoint);
+        }
+
+
+        private static async Task<ApiResponse> ExecuteRequestJsonInternal(
+            HttpRequestMessage httpRequest, string request, object data = null,
+            RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
+        {
+            var response = await ExecuteRequestJsonInternal<object>(
+                    httpRequest, request, data, type, endPoint)
+                .ConfigureAwait(false);
+
+            return new ApiResponse
+            {
+                Code = response.Code,
+                IsError = response.IsError,
+                Message = response.Message
+            };
+        }
+        private static async Task<ApiResponse<T>> ExecuteRequestJsonInternal<T>(
+            HttpRequestMessage httpRequest, string request, object data = null,
+            RequestType type = RequestType.Post, ApiEndPoint endPoint = null)
+        {
+            HttpResponseMessage httpResponse;
+
             while (true)
             {
                 try
                 {
-                    var httpRequest = new HttpRequestMessage();
-                    HttpResponseMessage httpResponse;
-
                     httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    if (!string.IsNullOrEmpty(token))
-                        httpRequest.Headers.Authorization = new AuthenticationHeaderValue(token);
 
                     if (endPoint == null)
                         endPoint = ApiEndPoint.GeneralPublic;
@@ -204,7 +292,8 @@ namespace Memenim.Core.Api
 
                     try
                     {
-                        var resultResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(result);
+                        var resultResponse = GetApiResponse<T>(
+                            httpResponse, result, endPoint);
 
                         OnConnectionStateChanged(ConnectionStateType.Connected);
 

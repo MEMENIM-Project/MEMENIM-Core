@@ -20,7 +20,7 @@ namespace Memenim.Core.Api
                 name = nickname
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<AuthSchema>("users/add", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<AuthSchema>("users/add", requestData);
         }
 
         public static Task<ApiResponse<AuthSchema>> Login(string login,
@@ -32,7 +32,7 @@ namespace Memenim.Core.Api
                 password
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<AuthSchema>("users/login2", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<AuthSchema>("users/login2", requestData);
         }
 
         public static Task<ApiResponse> ChangePassword(string token,
@@ -44,12 +44,12 @@ namespace Memenim.Core.Api
                 newPassword
             };
 
-            return ApiRequestEngine.ExecuteRequestJson("users/changePassword", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("users/changePassword", requestData, token);
         }
 
         public static async Task<ApiResponse<int?>> GetId(string token)
         {
-            var response = await ApiRequestEngine.ExecuteRequestJson<IdSchema>("users/profile/get", null, token)
+            var response = await ApiRequestEngine.ExecuteAnonymRequestJson<IdSchema>("users/profile/get", null, token)
                 .ConfigureAwait(false);
 
             return new ApiResponse<int?>
@@ -71,7 +71,7 @@ namespace Memenim.Core.Api
                 offset
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<SearchedUserSchema>>("users/get", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<SearchedUserSchema>>("users/get", requestData);
         }
 
         public static async Task<ApiResponse<UserSchema>> GetUser(string token)
@@ -106,7 +106,7 @@ namespace Memenim.Core.Api
                 }
             };
 
-            var response = await ApiRequestEngine.ExecuteRequestJson<List<UserSchema>>("users/getById", requestData)
+            var response = await ApiRequestEngine.ExecuteAnonymRequestJson<List<UserSchema>>("users/getById", requestData)
                 .ConfigureAwait(false);
 
             var data = response.Data != null && response.Data.Count != 0
@@ -128,7 +128,7 @@ namespace Memenim.Core.Api
                 user_id = ids
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<UserSchema>>("users/getById", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<UserSchema>>("users/getById", requestData);
         }
 
         public static async Task<ApiResponse<ProfileSchema>> GetProfile(string token)
@@ -160,7 +160,7 @@ namespace Memenim.Core.Api
                 Id = id
             };
 
-            var response = await ApiRequestEngine.ExecuteRequestJson<List<ProfileSchema>>("users/profile/getById", requestData)
+            var response = await ApiRequestEngine.ExecuteAnonymRequestJson<List<ProfileSchema>>("users/profile/getById", requestData)
                 .ConfigureAwait(false);
 
             var data = response.Data != null && response.Data.Count != 0
@@ -178,12 +178,12 @@ namespace Memenim.Core.Api
 
         public static Task<ApiResponse> EditProfile(string token, ProfileSchema profileData)
         {
-            return ApiRequestEngine.ExecuteRequestJson("users/profile/set", profileData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("users/profile/set", profileData, token);
         }
 
         public static Task<ApiResponse<RocketPasswordSchema>> GetRocketPassword(string token)
         {
-            return ApiRequestEngine.ExecuteRequestJson<RocketPasswordSchema>("users/getRocketPassword", null, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<RocketPasswordSchema>("users/getRocketPassword", null, token);
         }
     }
 }

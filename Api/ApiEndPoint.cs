@@ -2,7 +2,7 @@
 
 namespace Memenim.Core.Api
 {
-    internal class ApiEndPoint
+    internal sealed class ApiEndPoint
     {
         public static ApiEndPoint GeneralDev { get; }
         public static ApiEndPoint GeneralPublic { get; }
@@ -20,7 +20,7 @@ namespace Memenim.Core.Api
             GeneralPublic = new ApiEndPoint(nameof(GeneralPublic), "http://public.apianon.ru:3000/");
             GroupDev = new ApiEndPoint(nameof(GroupDev), "http://dev.apianon.ru:8080/");
             GroupPublic = new ApiEndPoint(nameof(GroupPublic), "http://public.apianon.ru:8080/");
-            Chat = new ApiEndPoint(nameof(Chat), "https://chat.apianon.ru/");
+            Chat = new ApiEndPoint(nameof(Chat), "https://chat.apianon.ru/api/v1/");
             Photo = new ApiEndPoint(nameof(Photo), "http://fotoanon.ru/");
         }
 

@@ -2,6 +2,12 @@
 
 namespace Memenim.Core.Schema
 {
+    internal enum RocketErrorStatus : byte
+    {
+        Success = 0,
+        Error = 1
+    }
+
     public enum PostType : byte
     {
         New = 1,

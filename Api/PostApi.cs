@@ -43,7 +43,7 @@ namespace Memenim.Core.Api
                 offset
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/get", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<PostSchema>>("posts/get", requestData);
         }
         public static Task<ApiResponse<List<PostSchema>>> Get(string token,
             PostType type = PostType.Popular, int count = 20, int offset = 0)
@@ -55,7 +55,7 @@ namespace Memenim.Core.Api
                 offset
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/get", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<PostSchema>>("posts/get", requestData, token);
         }
 
         public static async Task<ApiResponse<PostSchema>> GetById(int id)
@@ -68,7 +68,7 @@ namespace Memenim.Core.Api
                 }
             };
 
-            var response = await ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData)
+            var response = await ApiRequestEngine.ExecuteAnonymRequestJson<List<PostSchema>>("posts/getById", requestData)
                 .ConfigureAwait(false);
 
             var data = response.Data != null && response.Data.Count != 0
@@ -93,7 +93,7 @@ namespace Memenim.Core.Api
                 }
             };
 
-            var response = await ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData, token)
+            var response = await ApiRequestEngine.ExecuteAnonymRequestJson<List<PostSchema>>("posts/getById", requestData, token)
                 .ConfigureAwait(false);
 
             var data = response.Data != null && response.Data.Count != 0
@@ -115,7 +115,7 @@ namespace Memenim.Core.Api
                 post_ids = ids
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<PostSchema>>("posts/getById", requestData);
         }
         public static Task<ApiResponse<List<PostSchema>>> GetById(string token, int[] ids)
         {
@@ -124,7 +124,7 @@ namespace Memenim.Core.Api
                 post_ids = ids
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getById", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<PostSchema>>("posts/getById", requestData, token);
         }
 
         public static Task<ApiResponse<List<PostSchema>>> GetByUserId(
@@ -137,7 +137,7 @@ namespace Memenim.Core.Api
                 offset
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getByUserId", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<PostSchema>>("posts/getByUserId", requestData);
         }
         public static Task<ApiResponse<List<PostSchema>>> GetByUserId(string token,
             int userId, int count = 20, int offset = 0)
@@ -149,12 +149,12 @@ namespace Memenim.Core.Api
                 offset
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<PostSchema>>("posts/getByUserId", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<PostSchema>>("posts/getByUserId", requestData, token);
         }
 
         public static Task<ApiResponse<IdSchema>> Add(string token, PostSchema post)
         {
-            return ApiRequestEngine.ExecuteRequestJson<IdSchema>("posts/add", post, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<IdSchema>("posts/add", post, token);
         }
 
         public static Task<ApiResponse> Remove(string token, int id)
@@ -164,12 +164,12 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson("posts/removePost", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("posts/removePost", requestData, token);
         }
 
         public static Task<ApiResponse> Edit(string token, PostEditSchema schema)
         {
-            return ApiRequestEngine.ExecuteRequestJson("posts/edit", schema, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("posts/edit", schema, token);
         }
 
         public static Task<ApiResponse> AddView(int id)
@@ -179,7 +179,7 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson("posts/viewAdd", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("posts/viewAdd", requestData);
         }
         public static Task<ApiResponse> AddView(string token, int id)
         {
@@ -188,7 +188,7 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson("posts/viewAdd", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("posts/viewAdd", requestData, token);
         }
 
         public static Task<ApiResponse> AddRepost(int id)
@@ -198,7 +198,7 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson("posts/repost", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("posts/repost", requestData);
         }
         public static Task<ApiResponse> AddRepost(string token, int id)
         {
@@ -207,7 +207,7 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson("posts/repost", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("posts/repost", requestData, token);
         }
 
         public static Task<ApiResponse<CountSchema>> AddLike(string token, int id)
@@ -217,7 +217,7 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/likeAdd", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<CountSchema>("posts/likeAdd", requestData, token);
         }
 
         public static Task<ApiResponse<CountSchema>> RemoveLike(string token, int id)
@@ -227,7 +227,7 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/likeDelete", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<CountSchema>("posts/likeDelete", requestData, token);
         }
 
         public static Task<ApiResponse<CountSchema>> AddDislike(string token,  int id)
@@ -237,7 +237,7 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeAdd", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<CountSchema>("posts/dislikeAdd", requestData, token);
         }
 
         public static Task<ApiResponse<CountSchema>> RemoveDislike(string token, int id)
@@ -247,7 +247,7 @@ namespace Memenim.Core.Api
                 post_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeDelete", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<CountSchema>("posts/dislikeDelete", requestData, token);
         }
 
         public static Task<ApiResponse<List<PostCategorySchema>>> GetPostCategories()
@@ -257,7 +257,7 @@ namespace Memenim.Core.Api
                 count = uint.MaxValue
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<PostCategorySchema>>("posts/getCategories", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<PostCategorySchema>>("posts/getCategories", requestData);
         }
 
 
@@ -271,7 +271,7 @@ namespace Memenim.Core.Api
                 offset
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<CommentSchema>>("posts/getComments", requestData);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<CommentSchema>>("posts/getComments", requestData);
         }
         public static Task<ApiResponse<List<CommentSchema>>> GetComments(string token, int postId, int count = 20, int offset = 0)
         {
@@ -282,7 +282,7 @@ namespace Memenim.Core.Api
                 offset
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<List<CommentSchema>>("posts/getComments", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<CommentSchema>>("posts/getComments", requestData, token);
         }
 
         public static Task<ApiResponse<IdSchema>> AddComment(string token, int postId, string text, bool? anonymous = false)
@@ -294,7 +294,7 @@ namespace Memenim.Core.Api
                 anonim = Convert.ToInt32(anonymous)
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<IdSchema>("posts/commentAdd", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<IdSchema>("posts/commentAdd", requestData, token);
         }
 
         public static Task<ApiResponse> RemoveComment(string token, int id)
@@ -304,7 +304,7 @@ namespace Memenim.Core.Api
                 comment_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson("posts/removeComment", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("posts/removeComment", requestData, token);
         }
 
         public static Task<ApiResponse> EditComment(string token, int id, string text)
@@ -315,7 +315,7 @@ namespace Memenim.Core.Api
                 text
             };
 
-            return ApiRequestEngine.ExecuteRequestJson("posts/editComment", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson("posts/editComment", requestData, token);
         }
 
         public static Task<ApiResponse<CountSchema>> AddLikeComment(string token, int id)
@@ -325,7 +325,7 @@ namespace Memenim.Core.Api
                 comment_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/likeCommentAdd", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<CountSchema>("posts/likeCommentAdd", requestData, token);
         }
 
         public static Task<ApiResponse<CountSchema>> RemoveLikeComment(string token, int id)
@@ -335,7 +335,7 @@ namespace Memenim.Core.Api
                 comment_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/likeCommentDelete", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<CountSchema>("posts/likeCommentDelete", requestData, token);
         }
 
         public static Task<ApiResponse<CountSchema>> AddDislikeComment(string token, int id)
@@ -345,7 +345,7 @@ namespace Memenim.Core.Api
                 comment_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeCommentAdd", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<CountSchema>("posts/dislikeCommentAdd", requestData, token);
         }
 
         public static Task<ApiResponse<CountSchema>> RemoveDislikeComment(string token, int id)
@@ -355,7 +355,7 @@ namespace Memenim.Core.Api
                 comment_id = id
             };
 
-            return ApiRequestEngine.ExecuteRequestJson<CountSchema>("posts/dislikeCommentDelete", requestData, token);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<CountSchema>("posts/dislikeCommentDelete", requestData, token);
         }
     }
 }

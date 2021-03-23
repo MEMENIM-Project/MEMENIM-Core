@@ -9,7 +9,8 @@ namespace Memenim.Core.Api
     {
         public static Task<ApiResponse<List<LibraryPhotoSchema>>> GetLibraryPhotos()
         {
-            return ApiRequestEngine.ExecuteRequestJson<List<LibraryPhotoSchema>>("getLibrary", null, null, RequestType.Get);
+            return ApiRequestEngine.ExecuteAnonymRequestJson<List<LibraryPhotoSchema>>(
+                "getLibrary", null, null, RequestType.Get);
         }
     }
 }
