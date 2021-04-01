@@ -26,7 +26,7 @@ namespace Memenim.Core.Api
 
         }
         public CoreInformationEventArgs(Exception sourceException,
-            string message)
+            string message = null)
         {
             SourceException = sourceException;
             Message = message;
@@ -57,7 +57,7 @@ namespace Memenim.Core.Api
 
         }
         public CoreWarningEventArgs(Exception sourceException,
-            string message)
+            string message = null)
         {
             SourceException = sourceException;
             Message = message;
