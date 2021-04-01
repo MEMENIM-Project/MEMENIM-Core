@@ -5,7 +5,20 @@ namespace Memenim.Core.Api
     public class CoreInformationEventArgs : EventArgs
     {
         public Exception SourceException { get; }
-        public string Message { get; }
+        private string _message;
+        public string Message
+        {
+            get
+            {
+                return _message
+                       ?? SourceException?.Message
+                       ?? string.Empty;
+            }
+            private set
+            {
+                _message = value;
+            }
+        }
 
         public CoreInformationEventArgs(string message)
             : this(null, message)
@@ -23,7 +36,20 @@ namespace Memenim.Core.Api
     public class CoreWarningEventArgs : EventArgs
     {
         public Exception SourceException { get; }
-        public string Message { get; }
+        private string _message;
+        public string Message
+        {
+            get
+            {
+                return _message
+                       ?? SourceException?.Message
+                       ?? string.Empty;
+            }
+            private set
+            {
+                _message = value;
+            }
+        }
 
         public CoreWarningEventArgs(string message)
             : this(null, message)
@@ -41,20 +67,31 @@ namespace Memenim.Core.Api
     public class CoreErrorEventArgs : EventArgs
     {
         public Exception SourceException { get; }
-        public string Message { get; }
-        public string Stacktrace { get; }
+        private string _message;
+        public string Message
+        {
+            get
+            {
+                return _message
+                       ?? SourceException?.Message
+                       ?? string.Empty;
+            }
+            private set
+            {
+                _message = value;
+            }
+        }
 
-        public CoreErrorEventArgs(string message, string stacktrace)
-            : this(null, message, stacktrace)
+        public CoreErrorEventArgs(string message)
+            : this(null, message)
         {
 
         }
         public CoreErrorEventArgs(Exception sourceException,
-            string message, string stacktrace)
+            string message = null)
         {
             SourceException = sourceException;
             Message = message;
-            Stacktrace = stacktrace;
         }
     }
 

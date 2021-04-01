@@ -325,8 +325,7 @@ namespace Memenim.Core.Api
                             OnError(null, new CoreErrorEventArgs(
                                 ex,
                                 $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response serialization error. " +
-                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n",
-                                ex.StackTrace));
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n"));
 
                             return new ApiResponse<T>
                             {
@@ -343,8 +342,7 @@ namespace Memenim.Core.Api
                             OnError(null, new CoreErrorEventArgs(
                                 ex2,
                                 $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response serialization error. " +
-                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n",
-                                ex2.StackTrace));
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n"));
 
                             return new ApiResponse<T>
                             {
@@ -360,8 +358,7 @@ namespace Memenim.Core.Api
                             OnError(null, new CoreErrorEventArgs(
                                 ex2,
                                 $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] rejected (too many requests). " +
-                                $"\nCode={resultCode}",
-                                ex2.StackTrace));
+                                $"\nCode={resultCode}"));
 
                             await Task.Delay(TimeSpan.FromMilliseconds(
                                     RandomGenerator.Next(300, 1500)))
@@ -374,8 +371,7 @@ namespace Memenim.Core.Api
                             OnError(null, new CoreErrorEventArgs(
                                 ex2,
                                 $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response read error. " +
-                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n",
-                                ex2.StackTrace));
+                                $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n"));
 
                             await Task.Delay(TimeSpan.FromSeconds(3))
                                 .ConfigureAwait(false);
@@ -387,8 +383,7 @@ namespace Memenim.Core.Api
                         OnError(null, new CoreErrorEventArgs(
                             ex,
                             $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] rejected (too many requests). " +
-                            $"\nCode={resultCode}",
-                            ex.StackTrace));
+                            $"\nCode={resultCode}"));
 
                         await Task.Delay(TimeSpan.FromMilliseconds(
                                 RandomGenerator.Next(300, 1500)))
@@ -401,8 +396,7 @@ namespace Memenim.Core.Api
                         OnError(null, new CoreErrorEventArgs(
                             ex,
                             $"Request[Uri={httpRequest?.RequestUri?.ToString() ?? "Unknown"}, Content={jsonData ?? "Unknown"}] response read error. " +
-                            $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n",
-                            ex.StackTrace));
+                            $"\nCode={resultCode}, Response=\n{result ?? "Unknown"}\n"));
 
                         await Task.Delay(TimeSpan.FromSeconds(3))
                             .ConfigureAwait(false);
@@ -415,8 +409,7 @@ namespace Memenim.Core.Api
                     OnError(null, new CoreErrorEventArgs(
                         ex,
                         $"Request[Uri={(endPoint == null ? ApiEndPoint.GeneralPublic.Url : endPoint.Url) + request}] " +
-                        "sending error.",
-                        ex.StackTrace));
+                        "sending error."));
 
                     await Task.Delay(TimeSpan.FromSeconds(1))
                         .ConfigureAwait(false);
