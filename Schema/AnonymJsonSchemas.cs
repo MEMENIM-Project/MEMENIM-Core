@@ -1580,9 +1580,9 @@ namespace Memenim.Core.Schema
             }
         }
 
-        private long _utcDate;
+        private ulong _utcDate;
         [JsonProperty("date")]
-        public long UtcDate
+        public ulong UtcDate
         {
             get
             {
@@ -1887,9 +1887,9 @@ namespace Memenim.Core.Schema
             }
         }
 
-        private long _utcDate;
+        private ulong _utcDate;
         [JsonProperty("date")]
-        public long UtcDate
+        public ulong UtcDate
         {
             get
             {
